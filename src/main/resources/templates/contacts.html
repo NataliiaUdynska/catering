@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Контакты</title>
+    <style>
+        .error { color: red; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+<h1>Контакты</h1>
+<p>Телефон: +7 (XXX) XXX-XX-XX</p>
+<p>Email: info@catering.example</p>
+
+<h2>Заказать звонок</h2>
+
+<div th:if="${success}" class="success">
+    Спасибо! Мы скоро свяжемся с вами.
+</div>
+
+<form th:object="${contactRequest}" th:action="@{/contacts}" method="post">
+    <div>
+        <label>Имя:</label><br/>
+        <input type="text" th:field="*{name}" />
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>
+    </div>
+
+    <div>
+        <label>Телефон:</label><br/>
+        <input type="text" th:field="*{phone}" />
+        <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error"></span>
+    </div>
+
+    <div>
+        <label>Вопрос:</label><br/>
+        <textarea th:field="*{message}"></textarea>
+        <span th:if="${#fields.hasErrors('message')}" th:errors="*{message}" class="error"></span>
+    </div>
+
+    <button type="submit">Отправить</button>
+</form>
+
+<a href="/">← На главную</a>
+</body>
+</html>
