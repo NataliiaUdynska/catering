@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кейтеринг — Главная</title>
+</head>
+<body>
+<h1>Добро пожаловать в наш кейтеринг!</h1>
+<p>Свежие блюда, профессиональное обслуживание, идеальные события.</p>
+
+<nav>
+    <a href="/">Главная</a> |
+    <a href="/about">О нас</a> |
+    <a href="/contacts">Контакты</a> |
+    <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Профиль</a>
+    <a th:unless="${#authentication?.authenticated}" href="/login">Войти</a>
+</nav>
+</body>
+</html>
