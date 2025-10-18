@@ -1,17 +1,10 @@
-package com.example.Catering.entity;
+package com.example.Catering.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import java.util.Arrays;
+import jakarta.validation.constraints.Size;
 
-@Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserRegistrationDto {
 
     @NotBlank
     private String firstName;
@@ -24,22 +17,10 @@ public class User {
     private String email;
 
     @NotBlank
-    private String password; // хэшированный
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    public enum Role {
-        CLIENT, STAFF, ADMIN
-    }
-
-    // Конструктор по умолчанию (обязателен для JPA)
-    public User() {}
+    @Size(min = 6, message = "Пароль должен быть не менее 6 символов")
+    private String password;
 
     // Геттеры и сеттеры
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
 
@@ -51,7 +32,4 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
 }

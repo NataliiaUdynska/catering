@@ -3,20 +3,28 @@ package com.example.Catering.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
         @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
+
+        @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-                HttpSecurity headers1 = http
+                http
                         .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/h2-console/**").permitAll() // ⬅️ Разрешаем доступ к H2 Console
-                                .anyRequest().permitAll()
+                                .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/register", "/login").permitAll()
+                                .anyRequest().permitAll() // пока всё открыто
                         )
-                        .csrf(csrf -> csrf.disable()) // временно отключаем CSRF
-                        .headers(headers -> headers.frameOptions().disable());// ⬅️ Важно! H2 использует iframe
+                        .csrf(csrf -> csrf.disable())
+                        .headers(headers -> headers.frameOptions().disable());
 
                 return http.build();
         }

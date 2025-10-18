@@ -1,12 +1,166 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Кейтеринг — Главная</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f7f7f5;
+            color: #333;
+        }
+
+        /* Навигация */
+        nav {
+            background-color: #ffffff;
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: #444;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s, border-bottom 0.3s;
+            padding-bottom: 5px;
+        }
+
+        nav a:hover {
+            color: #6b8e77;
+            border-bottom: 2px solid #6b8e77;
+        }
+
+        /* Шапка */
+        header {
+            position: relative;
+            background-image: url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 65vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Затемнение на фоне */
+        .header-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 1;
+        }
+
+        /* Блок с текстом и полупрозрачной подложкой */
+        .header-content {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 30px 40px;
+            border-radius: 16px;
+            backdrop-filter: blur(6px);
+            max-width: 600px;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            color: #2d2d2d;
+            margin-bottom: 10px;
+        }
+
+        .header-content p {
+            font-size: 1.2rem;
+            color: #3f3f3f;
+        }
+
+        /* Основные секции */
+        .section {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            color: #444;
+            margin-bottom: 25px;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        /* Галерея */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Блок преимуществ */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #6b8e77;
+            margin-bottom: 10px;
+        }
+
+        /* Футер */
+        footer {
+            background-color: #e9e9e7;
+            color: #555;
+            text-align: center;
+            padding: 25px 0;
+            font-size: 0.95rem;
+            border-top: 1px solid #dcdcdc;
+            margin-top: 60px;
+        }
+    </style>
 </head>
 <body>
-<h1>Добро пожаловать в наш кейтеринг!</h1>
-<p>Свежие блюда, профессиональное обслуживание, идеальные события!</p>
 
 <nav>
     <a href="/">Главная</a> |
@@ -14,6 +168,48 @@
     <a href="/contacts">Контакты</a> |
     <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Профиль</a>
     <a th:unless="${#authentication?.authenticated}" href="/login">Войти</a>
+    <a href="/register">Регистрация</a>
 </nav>
+
+<header>
+    <div class="header-overlay"></div>
+    <div class="header-content">
+        <h1>Добро пожаловать в наш кейтеринг!</h1>
+        <p>Изысканные блюда, утончённый стиль, забота о деталях.</p>
+    </div>
+</header>
+
+<section class="section">
+    <h2>Наши лучшие блюда</h2>
+    <div class="gallery">
+        <img src="https://aif-s3.aif.ru/images/005/761/2bd87c4308ab354150e915c273e555c2.jpg" alt="Блюдо 1">
+        <img src="https://www.bahroma1.ru/goods/img-articles/kak-pravilno-fotografirovat.jpg" alt="Блюдо 2">
+        <img src="https://receptor.top/media/zoo/images/2776-4_4c469d7a621d8c1d925c0f3b75bfe5e7.jpg" alt="Блюдо 3">
+        <img src="https://www.kulina.ru/images/docs/Image/sal(31).jpg" alt="Блюдо 4">
+    </div>
+</section>
+
+<section class="section">
+    <h2>Почему выбирают нас?</h2>
+    <div class="features">
+        <div class="feature-card">
+            <h3>Свежие ингредиенты</h3>
+            <p>Мы используем только свежие продукты от проверенных поставщиков.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Профессиональная команда</h3>
+            <p>Наши повара и официанты создают безупречный сервис для любого события.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Индивидуальный подход</h3>
+            <p>Мы учитываем ваши пожелания и делаем каждое меню уникальным.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 Кейтеринг. Все права защищены.</p>
+</footer>
+
 </body>
 </html>

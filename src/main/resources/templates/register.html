@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f7f7f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: #ffffff;
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        nav a {
+            color: #444;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 500;
+            transition: color 0.3s, border-bottom 0.3s;
+            padding-bottom: 5px;
+        }
+
+        nav a:hover {
+            color: #6b8e77;
+            border-bottom: 2px solid #6b8e77;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 40px 50px;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 25px;
+        }
+
+        form div {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #6b8e77;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            background-color: #6b8e77;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #5d7c69;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            color: #c0392b;
+            font-size: 0.9rem;
+        }
+
+        .success {
+            color: #2e7d32;
+            background: rgba(46, 125, 50, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #6b8e77;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #e9e9e7;
+            color: #555;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.95rem;
+            border-top: 1px solid #dcdcdc;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/">Главная</a> |
+    <a href="/about">О нас</a> |
+    <a href="/contacts">Контакты</a>
+</nav>
+
+<main>
+    <div class="form-container">
+        <h1>Регистрация клиента</h1>
+
+        <div th:if="${success}" class="success">
+            Регистрация прошла успешно! Теперь вы можете <a href="/login">войти</a>.
+        </div>
+
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+        <form th:object="${user}" th:action="@{/register}" method="post">
+            <div>
+                <label>Имя:</label>
+                <input type="text" th:field="*{firstName}" />
+                <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error"></span>
+            </div>
+
+            <div>
+                <label>Фамилия:</label>
+                <input type="text" th:field="*{lastName}" />
+                <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error"></span>
+            </div>
+
+            <div>
+                <label>Email:</label>
+                <input type="email" th:field="*{email}" />
+                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></span>
+            </div>
+
+            <div>
+                <label>Пароль (минимум 6 символов):</label>
+                <input type="password" th:field="*{password}" />
+                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></span>
+            </div>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+
+        <div class="links">
+            <p>Уже есть аккаунт? <a href="/login">Войти</a></p>
+            <a href="/">← На главную</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Кейтеринг. Все права защищены.</p>
+</footer>
+
+</body>
+</html>
