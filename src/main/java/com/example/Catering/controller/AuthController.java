@@ -18,6 +18,7 @@ public class AuthController {
         this.userService = userService;
     }
 
+    // --- Регистрация ---
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new UserRegistrationDto());
@@ -42,5 +43,11 @@ public class AuthController {
             model.addAttribute("error", e.getMessage());
             return "register";
         }
+    }
+
+    // --- Вход ---
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }
