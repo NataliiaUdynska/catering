@@ -1,3 +1,4 @@
+// src/main/java/com/example/Catering/config/SecurityConfig.java
 package com.example.Catering.config;
 
 import org.springframework.context.annotation.Bean;
@@ -22,12 +23,13 @@ public class SecurityConfig {
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                                .requestMatchers("/profile/**").hasRole("CLIENT") // только клиенты
-                                .anyRequest().permitAll() // остальное пока открыто
+                                .requestMatchers("/profile/**").hasRole("CLIENT")
+                                .anyRequest().permitAll()
                         )
                         .formLogin(form -> form
-                                .loginPage("/login")           // кастомная страница входа
-                                .defaultSuccessUrl("/profile", true) // после входа → профиль
+                                .loginPage("/login")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/profile", true)
                                 .permitAll()
                         )
                         .logout(logout -> logout

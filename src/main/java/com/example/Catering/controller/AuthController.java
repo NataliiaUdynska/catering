@@ -18,7 +18,6 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // --- Регистрация ---
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new UserRegistrationDto());
@@ -26,26 +25,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(
-            @Valid UserRegistrationDto userDto,
-            BindingResult result,
-            Model model) {
-
+    public String registerUser(@Valid UserRegistrationDto userDto, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("user", userDto);
             return "register";
         }
 
         try {
             userService.registerClient(userDto);
             model.addAttribute("success", true);
+            model.addAttribute("user", new UserRegistrationDto());
             return "register";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
+            model.addAttribute("user", userDto);
             return "register";
         }
     }
 
-    // --- Вход ---
     @GetMapping("/login")
     public String login() {
         return "login";

@@ -18,7 +18,6 @@ public class UserService {
     }
 
     public void registerClient(UserRegistrationDto dto) {
-        // Проверка, что email не занят
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
@@ -28,7 +27,7 @@ public class UserService {
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setRole(User.Role.CLIENT); // ← автоматически клиент
+        user.setRole(User.Role.CLIENT);
 
         userRepository.save(user);
     }
