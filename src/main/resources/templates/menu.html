@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Наше меню</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .name { font-size: 1.2em; font-weight: bold; color: #333; }
+        .price { color: #6b8e77; font-weight: bold; }
+        .category { color: #888; font-size: 0.9em; margin-top: 4px; }
+    </style>
+</head>
+<body>
+<h1>Наше меню</h1>
+
+<div class="item" th:each="item : ${menuItems}">
+    <div class="name" th:text="${item.name}">Название</div>
+    <div th:text="${item.description}">Описание</div>
+    <div class="price" th:text="|Цена: ${#numbers.formatCurrency(item.price)}|">Цена</div>
+    <div class="category" th:text="|Категория: ${item.category}|">Категория</div>
+</div>
+
+<hr>
+<a href="/">← На главную</a>
+</body>
+</html>

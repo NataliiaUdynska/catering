@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Кейтеринг — Главная</title>
+
     <style>
         body {
             margin: 0;
@@ -25,7 +26,7 @@
         nav a {
             color: #444;
             text-decoration: none;
-            margin: 0 20px;
+            margin: 0 18px;
             font-weight: 500;
             font-size: 1rem;
             transition: color 0.3s, border-bottom 0.3s;
@@ -51,7 +52,6 @@
             overflow: hidden;
         }
 
-        /* Затемнение на фоне */
         .header-overlay {
             position: absolute;
             inset: 0;
@@ -59,7 +59,6 @@
             z-index: 1;
         }
 
-        /* Блок с текстом и полупрозрачной подложкой */
         .header-content {
             position: relative;
             z-index: 2;
@@ -81,7 +80,6 @@
             color: #3f3f3f;
         }
 
-        /* Основные секции */
         .section {
             max-width: 1100px;
             margin: 60px auto;
@@ -95,13 +93,6 @@
             margin-bottom: 25px;
         }
 
-        .section p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #666;
-        }
-
-        /* Галерея */
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -123,7 +114,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        /* Блок преимуществ */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -148,7 +138,6 @@
             margin-bottom: 10px;
         }
 
-        /* Футер */
         footer {
             background-color: #e9e9e7;
             color: #555;
@@ -159,16 +148,22 @@
             margin-top: 60px;
         }
     </style>
+
 </head>
 <body>
 
 <nav>
-    <a href="/">Главная</a> |
-    <a href="/about">О нас</a> |
-    <a href="/contacts">Контакты</a> |
+    <a href="/">Главная</a>
+    <a href="/about">О нас</a>
+    <a href="/contacts">Контакты</a>
+    <a href="/menu">Меню</a>
+
     <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Профиль</a>
-    <a href="/login">Войти</a> |
-    <a href="/register">Регистрация</a>
+    <a th:if="${#authentication?.authenticated}" href="/logout">Выйти</a>
+
+    <a th:unless="${#authentication?.authenticated}" href="/login">Войти</a>
+    <a th:unless="${#authentication?.authenticated}" href="/register">Регистрация</a>
+</nav>
 
 <header>
     <div class="header-overlay"></div>
