@@ -14,7 +14,7 @@ public class InfoController {
 
     private final ContactService contactService;
 
-    // 👇 Явный конструктор для внедрения зависимости
+    //  Явный конструктор для внедрения зависимости
     public InfoController(ContactService contactService) {
         this.contactService = contactService;
     }

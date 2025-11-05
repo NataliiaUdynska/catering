@@ -3,39 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Мой профиль</title>
-
     <style>
         body {
             font-family: "Segoe UI", Arial, sans-serif;
             margin: 0;
             background: #f7f7f7;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 20px;
         }
 
-        .profile-card {
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profile-card, .orders-card {
             background: #fff;
-            padding: 35px;
+            padding: 30px;
             border-radius: 14px;
-            width: 380px;
             box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-            text-align: center;
-            animation: fadeIn 0.5s ease;
         }
 
         h1 {
             font-size: 26px;
             margin-bottom: 10px;
             color: #444;
+            text-align: center;
         }
 
         .line {
             height: 2px;
             width: 60px;
             background: #c2a878;
-            margin: 10px auto 25px auto;
+            margin: 10px auto 20px auto;
             border-radius: 4px;
         }
 
@@ -57,6 +59,7 @@
 
         .btn-block {
             margin-top: 25px;
+            text-align: center;
         }
 
         a {
@@ -67,6 +70,7 @@
             font-size: 15px;
             font-weight: 500;
             transition: .2s;
+            display: inline-block;
         }
 
         .logout {
@@ -81,45 +85,96 @@
         }
         .home:hover { background: #3c5b47; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .order {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .order:last-child {
+            border-bottom: none;
+        }
+        .order h3 {
+            margin: 0 0 10px 0;
+            color: #496d55;
+        }
+        .order p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .no-orders {
+            color: #888;
+            font-style: italic;
+            text-align: center;
         }
 
+        .order-btn {
+            background: #496d55;
+            color: white;
+            font-weight: 600;
+        }
+        .order-btn:hover {
+            background: #3c5b47;
+        }
     </style>
 </head>
-
 <body>
+<div class="container">
 
-<div class="profile-card">
-    <h1>Мой профиль</h1>
-    <div class="line"></div>
+    <!-- Профиль -->
+    <div class="profile-card">
+        <h1>Мой профиль</h1>
+        <div class="line"></div>
 
-    <div class="info">
-        <span class="label">Имя:</span>
-        <span th:text="${user.firstName}">Имя</span>
+        <div class="info">
+            <span class="label">Имя:</span>
+            <span th:text="${user.firstName}">Имя</span>
+        </div>
+
+        <div class="info">
+            <span class="label">Фамилия:</span>
+            <span th:text="${user.lastName}">Фамилия</span>
+        </div>
+
+        <div class="info">
+            <span class="label">Email:</span>
+            <span th:text="${user.email}">email@example.com</span>
+        </div>
+
+        <div class="info">
+            <span class="label">Роль:</span>
+            <span th:text="${user.role}" class="role">Клиент</span>
+        </div>
+
+        <div class="btn-block">
+            <a href="/logout" class="logout">Выйти</a>
+            <a href="/" class="home">На главную</a>
+        </div>
     </div>
 
-    <div class="info">
-        <span class="label">Фамилия:</span>
-        <span th:text="${user.lastName}">Фамилия</span>
-    </div>
+    <!-- История заказов -->
+    <div class="orders-card">
+        <h1>История заказов</h1>
+        <div class="line"></div>
 
-    <div class="info">
-        <span class="label">Email:</span>
-        <span th:text="${user.email}">email@example.com</span>
-    </div>
+        <div th:if="${orders.empty}">
+            <p class="no-orders">У вас пока нет заказов.</p>
+        </div>
 
-    <div class="info">
-        <span class="label">Роль:</span>
-        <span th:text="${user.role}" class="role">Клиент</span>
-    </div>
+        <div th:unless="${orders.empty}">
+            <div class="order" th:each="order : ${orders}">
+                <h3>Заказ №<span th:text="${order.id}">1</span></h3>
+                <p><strong>Дата мероприятия:</strong>
+                    <span th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</span>
+                </p>
+                <p><strong>Гостей:</strong> <span th:text="${order.numberOfGuests}">2</span></p>
+                <p><strong>Статус:</strong> <span th:text="${order.status}">PENDING</span></p>
+            </div>
+        </div>
 
-    <div class="btn-block">
-        <a href="/logout" class="logout">Выйти</a>
-        <a href="/" class="home">На главную</a>
+        <div class="btn-block">
+            <a href="/order" class="order-btn">Оформить заказ</a>
+        </div>
     </div>
 </div>
-
 </body>
 </html>

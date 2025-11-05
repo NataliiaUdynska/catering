@@ -3,7 +3,10 @@ package com.example.Catering.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -32,6 +35,9 @@ public class User {
     public enum Role {
         CLIENT, STAFF, ADMIN
     }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
     // Конструктор по умолчанию (обязателен для JPA)
     public User() {}

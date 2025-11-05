@@ -159,7 +159,6 @@
     <a href="/menu">Меню</a>
 
     <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Профиль</a>
-    <a th:if="${#authentication?.authenticated}" href="/logout">Выйти</a>
 
     <a th:unless="${#authentication?.authenticated}" href="/login">Войти</a>
     <a th:unless="${#authentication?.authenticated}" href="/register">Регистрация</a>

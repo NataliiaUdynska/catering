@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head><meta charset="UTF-8"><title>Оформить заказ</title></head>
+<body>
+<h1>Оформить заказ</h1>
+
+<form th:object="${order}" th:action="@{/order}" method="post">
+    <div>
+        <label>Дата и время мероприятия:</label>
+        <input type="datetime-local" th:field="*{eventDateTime}" required />
+    </div>
+    <div>
+        <label>Количество гостей:</label>
+        <input type="number" th:field="*{numberOfGuests}" min="1" required />
+    </div>
+    <button type="submit">Подтвердить заказ</button>
+</form>
+
+<hr>
+<a href="/cart">← Назад в корзину</a>
+</body>
+</html>
