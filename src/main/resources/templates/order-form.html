@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
-<head><meta charset="UTF-8"><title>Оформить заказ</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Оформить заказ</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f8; margin:0; padding:0; }
+        .container { max-width: 700px; margin:50px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.1); }
+        h1 { text-align:center; color:#264d3b; }
+        label { display:block; margin:10px 0 5px; font-weight:600; }
+        input, textarea { width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:15px; }
+        textarea { resize:none; height:80px; }
+        button { background:#2f6846; color:white; padding:12px 20px; border:none; border-radius:8px; font-weight:600; cursor:pointer; }
+        button:hover { background:#25563a; }
+        a { display:inline-block; margin-top:15px; color:#6bb587; text-decoration:none; }
+        a:hover { color:#5aa574; }
+    </style>
+</head>
 <body>
-<h1>Оформить заказ</h1>
-
-<form th:object="${order}" th:action="@{/order}" method="post">
-    <div>
+<div class="container">
+    <h1>Оформление заказа</h1>
+    <form th:object="${order}" th:action="@{/order}" method="post">
         <label>Дата и время мероприятия:</label>
-        <input type="datetime-local" th:field="*{eventDateTime}" required />
-    </div>
-    <div>
-        <label>Количество гостей:</label>
-        <input type="number" th:field="*{numberOfGuests}" min="1" required />
-    </div>
-    <button type="submit">Подтвердить заказ</button>
-</form>
+        <input type="datetime-local" th:field="*{eventDateTime}" required/>
 
-<hr>
-<a href="/cart">← Назад в корзину</a>
+        <label>Количество гостей:</label>
+        <input type="number" min="1" th:field="*{numberOfGuests}" required/>
+
+        <label>Адрес проведения мероприятия:</label>
+        <input type="text" th:field="*{eventAddress}" required/>
+
+        <label>Комментарий к заказу:</label>
+        <textarea th:field="*{notes}" placeholder="Например, особые предпочтения или пожелания"></textarea>
+
+        <button type="submit">Подтвердить заказ</button>
+    </form>
+    <a href="/cart">← Назад в корзину</a>
+</div>
 </body>
 </html>

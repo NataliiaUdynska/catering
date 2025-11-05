@@ -56,7 +56,6 @@ public class CartController {
             cart = new ArrayList<>();
             session.setAttribute("cart", cart);
         }
-
         cart.removeIf(Objects::isNull);
 
         boolean exists = false;
@@ -101,7 +100,7 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    // AJAX-обновление количества (опционально — можно убрать, если не используете)
+    // AJAX-метод для обновления количества
     @PostMapping("/cart/update-ajax")
     @ResponseBody
     public ResponseEntity<String> updateQuantityAjax(@RequestBody Map<String, Object> payload, HttpSession session) {
@@ -128,6 +127,7 @@ public class CartController {
                 updated.add(item);
             }
         }
+
         if (!found) {
             return ResponseEntity.badRequest().body("Блюдо не найдено");
         }
