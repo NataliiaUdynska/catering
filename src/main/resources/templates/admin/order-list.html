@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Заказы</title></head>
+<body>
+<h1>Все заказы</h1>
+<table border="1" style="width:100%;">
+    <tr>
+        <th>ID</th>
+        <th>Пользователь</th>
+        <th>Дата мероприятия</th>
+        <th>Кол-во гостей</th>
+        <th>Адрес</th>
+    </tr>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}">1</td>
+        <td th:text="${order.user.email}">user@example.com</td>
+        <td th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}">—</td>
+        <td th:text="${order.numberOfGuests}">0</td>
+        <td th:text="${order.eventAddress}">—</td>
+    </tr>
+</table>
+<a href="/admin">← Назад</a>
+</body>
+</html>

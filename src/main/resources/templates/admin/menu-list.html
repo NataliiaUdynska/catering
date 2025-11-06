@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Меню</title></head>
+<body>
+<h1>Меню</h1>
+<a href="/admin/menu/new">+ Добавить блюдо</a>
+<table border="1" style="width:100%; margin-top:20px;">
+    <tr><th>Название</th><th>Цена</th><th>Описание</th><th>Действия</th></tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.name}">Блюдо</td>
+        <td th:text="${#numbers.formatCurrency(item.price)}">0 ₽</td>
+        <td th:text="${item.description}">Описание</td>
+        <td>
+            <a th:href="@{/admin/menu/edit/{id}(id=${item.id})}">Редактировать</a> |
+            <a th:href="@{/admin/menu/delete/{id}(id=${item.id})}"
+               onclick="return confirm('Удалить?')">Удалить</a>
+        </td>
+    </tr>
+</table>
+<a href="/admin">← Назад</a>
+</body>
+</html>
