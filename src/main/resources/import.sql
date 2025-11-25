@@ -34,3 +34,8 @@ INSERT INTO menu_items (name, description, price, category) VALUES ('Чизке�
 INSERT INTO menu_items (name, description, price, category) VALUES ('Эклер ванильный', 'Заварное тесто, крем', 3.80, 'Десерты');
 INSERT INTO menu_items (name, description, price, category) VALUES ('Наполеон', 'Слоёный торт с кремом', 4.80, 'Десерты');
 INSERT INTO menu_items (name, description, price, category) VALUES ('Панна-котта', 'Сливочный итальянский десерт', 5.20, 'Десерты');
+
+INSERT INTO users (email, first_name, last_name, password, role) VALUES ('admin@example.com', 'Админ', 'Системный', '$2a$12$3Gg14f0D5fzelZY1GS.FeebNl/QDCuYLFCZMAtz7cZFAL9Z8CHJV6', 'ADMIN');
+
+
+

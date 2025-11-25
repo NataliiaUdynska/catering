@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Мой профиль</title>
@@ -7,12 +7,13 @@
         body {
             font-family: "Segoe UI", Arial, sans-serif;
             margin: 0;
-            background: #f7f7f7;
+            background: #f5f5f5;
             padding: 20px;
+            color: #444;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -22,21 +23,27 @@
         .profile-card, .orders-card {
             background: #fff;
             padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .profile-card:hover, .orders-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
         }
 
         h1 {
-            font-size: 26px;
+            font-size: 28px;
             margin-bottom: 10px;
-            color: #444;
+            color: #333;
             text-align: center;
         }
 
         .line {
-            height: 2px;
-            width: 60px;
-            background: #c2a878;
+            height: 3px;
+            width: 70px;
+            background: #496d55;
             margin: 10px auto 20px auto;
             border-radius: 4px;
         }
@@ -62,45 +69,60 @@
             text-align: center;
         }
 
-        a {
+        a, form button {
             text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
             margin: 0 6px;
             font-size: 15px;
-            font-weight: 500;
-            transition: .2s;
+            font-weight: 600;
+            transition: all 0.25s ease;
             display: inline-block;
         }
 
         .logout {
-            background: #ddd;
+            background: #e0e0e0;
             color: #333;
+            border: none;
+            cursor: pointer;
         }
-        .logout:hover { background: #c9c9c9; }
+        .logout:hover {
+            background: #cfcfcf;
+            transform: translateY(-2px);
+        }
 
         .home {
             background: #496d55;
             color: #fff;
         }
-        .home:hover { background: #3c5b47; }
-
+        .home:hover {
+            background: #3c5b47;
+            transform: translateY(-2px);
+        }
 
         .order {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            background: #fafafa;
+            border-left: 5px solid #496d55;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .order:last-child {
-            border-bottom: none;
+        .order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
+
         .order h3 {
             margin: 0 0 10px 0;
             color: #496d55;
         }
+
         .order p {
             margin: 5px 0;
             color: #555;
         }
+
         .no-orders {
             color: #888;
             font-style: italic;
@@ -111,14 +133,37 @@
             background: #496d55;
             color: white;
             font-weight: 600;
+            border: none;
+            cursor: pointer;
+            padding: 12px 28px;
+            border-radius: 10px;
         }
         .order-btn:hover {
             background: #3c5b47;
+            transform: translateY(-2px);
+        }
+
+        .order ul {
+            padding-left: 20px;
+            margin: 10px 0;
+            list-style-type: disc;
+        }
+        .order li {
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .order em {
+            color: #888;
         }
     </style>
 </head>
 <body>
 <div class="container">
+
+    <div sec:authorize="hasAnyRole('ADMIN','STAFF')" style="text-align: center; margin-top: 20px;">
+        <a href="/admin/orders" class="btn btn-checkout">Админка: Заказы</a>
+        <a href="/admin/menu" class="btn btn-checkout">Админка: Меню</a>
+    </div>
 
     <!-- Профиль -->
     <div class="profile-card">
@@ -146,7 +191,10 @@
         </div>
 
         <div class="btn-block">
-            <a href="/logout" class="logout">Выйти</a>
+            <!-- Форма выхода через POST (рекомендуется Spring Security) -->
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="logout">Выйти</button>
+            </form>
             <a href="/" class="home">На главную</a>
         </div>
     </div>
@@ -163,11 +211,31 @@
         <div th:unless="${orders.empty}">
             <div class="order" th:each="order : ${orders}">
                 <h3>Заказ №<span th:text="${order.id}">1</span></h3>
+
+                <p><strong>Заказ сделан:</strong>
+                    <span th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">05.11.2025 14:30</span>
+                </p>
+
                 <p><strong>Дата мероприятия:</strong>
                     <span th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</span>
                 </p>
+
                 <p><strong>Гостей:</strong> <span th:text="${order.numberOfGuests}">2</span></p>
                 <p><strong>Статус:</strong> <span th:text="${order.status}">PENDING</span></p>
+
+                <!-- Отображение блюд -->
+                <div th:if="${order.items != null and not #lists.isEmpty(order.items)}">
+                    <p><strong>Блюда:</strong></p>
+                    <ul>
+                        <li th:each="item : ${order.items}"
+                            th:text="${item.menuItem.name} + ' — ' + ${item.quantity} + ' шт.'">
+                            Блюдо — 2 шт.
+                        </li>
+                    </ul>
+                </div>
+                <div th:if="${order.items == null or #lists.isEmpty(order.items)}">
+                    <p><em>Блюда не добавлены.</em></p>
+                </div>
             </div>
         </div>
 

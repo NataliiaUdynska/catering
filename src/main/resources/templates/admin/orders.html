@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы — Админка</title>
+    <style>
+        .status-pending { color: orange; }
+        .status-confirmed { color: blue; }
+        .status-completed { color: green; }
+        .status-cancelled { color: red; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+    </style>
+</head>
+<body>
+<h1>Все заказы</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Пользователь</th>
+        <th>Дата мероприятия</th>
+        <th>Гостей</th>
+        <th>Статус</th>
+        <th>Блюда</th>
+        <th>Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}">1</td>
+        <td>
+            <span th:if="${order.user != null}" th:text="${order.user.email}">—</span>
+            <span th:if="${order.user == null}">—</span>
+        </td>
+        <td th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</td>
+        <td th:text="${order.numberOfGuests}">4</td>
+        <td>
+            <!-- Стилизованный статус -->
+            <span th:text="${order.status}"
+                  th:class="${order.status == 'PENDING' ? 'status-pending' :
+                            order.status == 'CONFIRMED' ? 'status-confirmed' :
+                            order.status == 'COMPLETED' ? 'status-completed' : 'status-cancelled'}">
+            </span>
+        </td>
+        <td>
+            <ul>
+                <li th:each="item : ${order.items}"
+                    th:text="${item.menuItem.name} + ' — ' + ${item.quantity}">
+                    Блюдо — 2 шт.
+                </li>
+            </ul>
+        </td>
+        <td>
+            <form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post">
+                <select name="status" onchange="this.form.submit()">
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${s}"
+                            th:selected="${s == order.status}">PENDING</option>
+                </select>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/">← Назад</a>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать блюдо</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 500px; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .error { color: red; font-size: 0.9em; }
+        .message { color: green; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+<h1>Редактировать блюдо</h1>
+
+<!-- Сообщение об успехе -->
+<div th:if="${message}" class="message" th:text="${message}"></div>
+
+<!-- Ошибки валидации -->
+<div th:if="${#fields.hasErrors('*')}" class="error">
+    <p>Пожалуйста, исправьте ошибки:</p>
+    <ul>
+        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+    </ul>
+</div>
+
+<form th:action="@{/admin/menu/update}" method="post" th:object="${item}">
+    <input type="hidden" th:field="*{id}" />
+    <input type="text" th:field="*{name}" placeholder="Название" required/>
+    <span th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}">Name Error</span>
+
+    <textarea th:field="*{description}" placeholder="Описание" rows="4"></textarea>
+    <span th:if="${#fields.hasErrors('description')}" class="error" th:errors="*{description}">Description Error</span>
+
+    <input type="number" step="0.01" th:field="*{price}" placeholder="Цена" required min="0"/>
+    <span th:if="${#fields.hasErrors('price')}" class="error" th:errors="*{price}">Price Error</span>
+
+    <input type="text" th:field="*{category}" placeholder="Категория" required/>
+    <span th:if="${#fields.hasErrors('category')}" class="error" th:errors="*{category}">Category Error</span>
+
+    <button type="submit">Сохранить</button>
+</form>
+
+<a href="/admin/menu">← Назад к меню</a>
+</body>
+</html>

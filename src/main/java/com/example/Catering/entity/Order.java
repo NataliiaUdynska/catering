@@ -1,7 +1,7 @@
 package com.example.Catering.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -21,9 +21,8 @@ public class Order {
     private User user;
 
     @NotNull
-    @Future
+    @FutureOrPresent
     private LocalDateTime eventDateTime;
-
     @Min(1)
     private int numberOfGuests;
 

@@ -1,4 +1,3 @@
-// src/main/java/com/example/Catering/controller/ProfileController.java
 package com.example.Catering.controller;
 
 import com.example.Catering.entity.User;

@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,25 +18,33 @@ public class SecurityConfig {
         }
 
         @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
+                        // Настройка доступа к путям
                         .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                                .requestMatchers("/profile/**").hasRole("CLIENT")
-                                .anyRequest().permitAll()
+                                .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                                .requestMatchers("/h2-console/**").permitAll() // Только для разработки!
+                                .requestMatchers("/", "/menu", "/cart", "/login", "/register", "/about", "/contacts").permitAll()
+                                .requestMatchers("/order", "/profile/**").authenticated()
+                                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "STAFF")
+                                .anyRequest().authenticated()
                         )
                         .formLogin(form -> form
                                 .loginPage("/login")
-                                .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/profile", true)
+                                .defaultSuccessUrl("/profile", true) // ← ПЕРЕНАПРАВЛЕНИЕ В ПРОФИЛЬ ПОСЛЕ ВХОДА
+                                .failureUrl("/login?error=true")
                                 .permitAll()
                         )
+                        // В методе filterChain(...)
                         .logout(logout -> logout
-                                .logoutSuccessUrl("/")
+                                .logoutUrl("/logout")              // URL для обработки выхода
+                                .logoutSuccessUrl("/login?logout") // Куда перенаправлять после выхода
+                                .invalidateHttpSession(true)
+                                .clearAuthentication(true)
                                 .permitAll()
                         )
-                        .csrf(csrf -> csrf.disable())
+                        // Для H2 Console (только в dev!)
+                        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                         .headers(headers -> headers.frameOptions().disable());
 
                 return http.build();

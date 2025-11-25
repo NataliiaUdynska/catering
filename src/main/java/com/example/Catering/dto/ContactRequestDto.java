@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 
 public class ContactRequestDto {
 
-@NotBlank
-private String name;
+    @NotBlank
+    private String name;
 
-@NotBlank
+    @NotBlank
     private String phone;
 
-@NotBlank
+    @NotBlank
     private String message;
 
     // Геттеры и сеттеры
@@ -23,4 +23,3 @@ private String name;
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
 }
-

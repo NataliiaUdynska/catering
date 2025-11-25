@@ -34,6 +34,6 @@ public class OrderItem {
     public MenuItem getMenuItem() { return menuItem; }
     public void setMenuItem(MenuItem menuItem) { this.menuItem = menuItem; }
 
-    public Integer getQuantity() { return quantity; }
+    public int getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
 }

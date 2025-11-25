@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Меню — Админка</title>
+</head>
+<body>
+<h1>Управление меню</h1>
+
+<h2>Добавить блюдо</h2>
+<form th:action="@{/admin/menu}" method="post" th:object="${newItem}">
+    <input type="text" th:field="*{name}" placeholder="Название" required/>
+    <textarea th:field="*{description}" placeholder="Описание"></textarea>
+    <input type="number" step="0.01" th:field="*{price}" placeholder="Цена" required/>
+    <input type="text" th:field="*{category}" placeholder="Категория" required/>
+    <button type="submit">Добавить</button>
+</form>
+
+<h2>Список блюд</h2>
+<table border="1">
+    <tr><th>Название</th><th>Цена</th><th>Категория</th><th>Действия</th></tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.name}">Салат</td>
+        <td th:text="${item.price}">100</td>
+        <td th:text="${item.category}">Салаты</td>
+        <td>
+            <a th:href="@{/admin/menu/edit/{id}(id=${item.id})}">Редактировать</a>
+            <form th:action="@{/admin/menu/delete/{id}(id=${item.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Удалить?')">Удалить</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<a href="/">← Назад</a>
+</body>
+</html>
