@@ -37,5 +37,5 @@ INSERT INTO menu_items (name, description, price, category) VALUES ('Панна-
 
 INSERT INTO users (email, first_name, last_name, password, role) VALUES ('admin@example.com', 'Админ', 'Системный', '$2a$12$3Gg14f0D5fzelZY1GS.FeebNl/QDCuYLFCZMAtz7cZFAL9Z8CHJV6', 'ADMIN');
 
-
+INSERT INTO users (email, first_name, last_name, password, role) VALUES ('tom@gmail.com', 'Том', 'Жуков', '$2a$12$Jkkl81yQoOtt7wVnqtp99eK3qutmAlgkzJ3cS2mPAzHkiPWvueGQa', 'CLIENT');
 
