@@ -3,61 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Заказы — Админка</title>
-
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f0f2f5;
             margin: 0;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
             padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #444;
             margin-bottom: 25px;
-            font-size: 28px;
-        }
-
-        .table-wrapper {
-            background: #fff;
-            padding: 25px;
-            border-radius: 16px;
-            max-width: 1200px;
-            margin: auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
         }
 
         th {
             background: #f5f6f8;
-            padding: 12px;
-            font-weight: bold;
             color: #555;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #ececec;
-            color: #333;
         }
 
         tr:hover {
             background: #fafafa;
         }
 
-        /* Статусы — бейджи */
         .status {
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: bold;
-            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
         }
 
         .status-pending { background: #fff4e5; color: #c27c0e; }
@@ -65,51 +58,46 @@
         .status-completed { background: #e6f7ed; color: #1b8a3d; }
         .status-cancelled { background: #fdeaea; color: #c20e0e; }
 
-        /* Select */
         select {
             padding: 6px 8px;
-            border: 1px solid #bbb;
-            border-radius: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 6px 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
 
-        select:hover {
-            border-color: #007bff;
+        button:hover {
+            background: #0056b3;
         }
 
-        /* Back link */
-        .back {
+        .back-link {
             display: block;
-            text-align: center;
             margin-top: 25px;
+            text-align: center;
             color: #007bff;
             text-decoration: none;
-            font-size: 15px;
         }
 
-        .back:hover {
+        .back-link:hover {
             text-decoration: underline;
         }
 
         ul {
             margin: 0;
-            padding-left: 18px;
-        }
-
-        /* Добавим стили для пустого списка блюд */
-        .no-items {
-            font-style: italic;
-            color: #888;
-            text-align: center;
+            padding-left: 16px;
         }
     </style>
 </head>
-
 <body>
-
-<h1>Все заказы</h1>
-
-<div class="table-wrapper">
+<div class="container">
+    <h1>Все заказы</h1>
 
     <table>
         <thead>
@@ -123,63 +111,40 @@
             <th>Действие</th>
         </tr>
         </thead>
-
         <tbody>
         <tr th:each="order : ${orders}">
-            <td th:text="${order.id}"></td>
-
-            <td th:text="${order.user != null ? order.user.email : '—'}"></td>
-
-            <td th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}"></td>
-
-            <td th:text="${order.numberOfGuests}"></td>
-
+            <td th:text="${order.id}">1</td>
+            <td th:text="${order.user.email}">user@example.com</td>
+            <td th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</td>
+            <td th:text="${order.numberOfGuests}">4</td>
             <td>
-                <!-- Безопасное отображение статуса -->
-                <span class="status"
-                      th:classappend="${
-                        order.status == 'PENDING' ? ' status-pending' :
-                        order.status == 'CONFIRMED' ? ' status-confirmed' :
-                        order.status == 'COMPLETED' ? ' status-completed' :
-                        order.status == 'CANCELLED' ? ' status-cancelled' :
-                        ' status-cancelled'
-                      }"
-                      th:text="${order.status != null ? order.status : 'UNKNOWN'}">
+                <span th:text="${order.status}"
+                      th:class="${'status status-' + #strings.toLowerCase(order.status)}">
                 </span>
             </td>
-
             <td>
                 <ul>
-                    <!-- Проверяем, что items не null и не пуст -->
-                    <li th:if="${order.items != null and not #lists.isEmpty(order.items)}"
-                        th:each="item : ${order.items}"
-                        th:text="${item.menuItem.name + ' — ' + item.quantity + ' шт.'}">
+                    <li th:each="item : ${order.items}"
+                        th:text="${item.menuItem.name} + ' — ' + ${item.quantity} + ' шт.'">
+                        Блюдо — 2 шт.
                     </li>
-                    <!-- Если блюд нет -->
-                    <li th:if="${order.items == null or #lists.isEmpty(order.items)}"
-                        class="no-items">Блюда не добавлены.</li>
                 </ul>
             </td>
-
             <td>
                 <form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post">
-                    <select name="status" onchange="this.form.submit()">
+                    <select name="statusParam" onchange="this.form.submit()">
                         <option th:each="s : ${statuses}"
                                 th:value="${s}"
                                 th:text="${s}"
-                                th:selected="${s == order.status}">
-                        </option>
+                                th:selected="${s == order.status}">PENDING</option>
                     </select>
                 </form>
             </td>
         </tr>
         </tbody>
-
     </table>
 
+    <a href="/" class="back-link">← На главную</a>
 </div>
-
-<a href="/" class="back">← Назад</a>
-
 </body>
 </html>

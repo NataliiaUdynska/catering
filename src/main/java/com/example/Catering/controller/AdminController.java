@@ -1,9 +1,12 @@
 package com.example.Catering.controller;
 
+import com.example.Catering.entity.Invoice;
 import com.example.Catering.entity.MenuItem;
 import com.example.Catering.entity.Order;
+import com.example.Catering.repository.InvoiceRepository;
 import com.example.Catering.repository.MenuItemRepository;
 import com.example.Catering.repository.OrderRepository;
+import com.example.Catering.service.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,49 +20,85 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final MenuItemRepository menuItemRepository;
     private final OrderRepository orderRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public AdminController(MenuItemRepository menuItemRepository, OrderRepository orderRepository) {
+    public AdminController(MenuItemRepository menuItemRepository, OrderRepository orderRepository,
+                           InvoiceRepository invoiceRepository, EmailService emailService) {
         this.menuItemRepository = menuItemRepository;
         this.orderRepository = orderRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.emailService = emailService;
     }
-
-    // ============= ЗАКАЗЫ =============
 
     @GetMapping("/orders")
     public String orders(Model model) {
         model.addAttribute("orders", orderRepository.findAll());
-        model.addAttribute("statuses", Order.OrderStatus.values()); // важно!
+        model.addAttribute("statuses", Order.OrderStatus.values());
         return "admin/orders";
     }
 
     @PostMapping("/orders/{id}/status")
     public String updateOrderStatus(
             @PathVariable Long id,
-            @RequestParam Order.OrderStatus status,
+            @RequestParam String statusParam,
             RedirectAttributes redirectAttributes) {
 
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Заказ с ID " + id + " не найден"));
 
+        Order.OrderStatus status;
+        try {
+            status = Order.OrderStatus.valueOf(statusParam);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Недопустимый статус: " + statusParam);
+            return "redirect:/admin/orders";
+        }
+
+        Order.OrderStatus oldStatus = order.getStatus();
+
         order.setStatus(status);
         orderRepository.save(order);
+
+        // Генерация и отправка счёта при изменении статуса на CONFIRMED
+        if (oldStatus != Order.OrderStatus.CONFIRMED && status == Order.OrderStatus.CONFIRMED) {
+            Invoice invoice = new Invoice(order);
+            invoice.setStatus("SENT");
+            invoiceRepository.save(invoice);
+
+            // Отправка email клиенту
+            emailService.sendInvoiceEmail(invoice);
+
+            // Перенаправление на страницу просмотра счёта
+            return "redirect:/admin/orders/" + id + "/view-invoice";
+        }
 
         redirectAttributes.addFlashAttribute("message", "Статус заказа обновлён!");
         return "redirect:/admin/orders";
     }
 
-    // ============= МЕНЮ =============
+    @GetMapping("/orders/{orderId}/view-invoice")
+    public String viewInvoice(@PathVariable Long orderId, Model model) {
+        Invoice invoice = invoiceRepository.findByOrderId(orderId);
+        if (invoice == null) {
+            model.addAttribute("errorMessage", "Счёт не найден");
+            return "error";
+        }
+        model.addAttribute("invoice", invoice);
+        return "admin/invoice";
+    }
 
+    // ============= УПРАВЛЕНИЕ МЕНЮ =============
     @GetMapping("/menu")
     public String menu(Model model) {
         model.addAttribute("items", menuItemRepository.findAll());
-        model.addAttribute("newItem", new MenuItem()); // важно!
+        model.addAttribute("newItem", new MenuItem());
         return "admin/menu";
     }
 
@@ -84,7 +123,7 @@ public class AdminController {
     @PostMapping("/menu/delete/{id}")
     public String deleteMenuItem(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (!menuItemRepository.existsById(id)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Блюдо уже удалено или не существует");
+            redirectAttributes.addFlashAttribute("errorMessage", "Блюдо не существует");
             return "redirect:/admin/menu";
         }
         menuItemRepository.deleteById(id);
@@ -95,8 +134,8 @@ public class AdminController {
     @GetMapping("/menu/edit/{id}")
     public String editMenuItemForm(@PathVariable Long id, Model model) {
         MenuItem item = menuItemRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Блюдо с ID " + id + " не найдено"));
-        model.addAttribute("item", item); // важно!
+                .orElseThrow(() -> new IllegalArgumentException("Блюдо не найдено"));
+        model.addAttribute("item", item);
         return "admin/edit-menu-item";
     }
 
@@ -107,8 +146,7 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            // Передаём ошибки и объект обратно в форму — без редиректа!
-            return "admin/edit-menu-item";
+            return "admin/edit-menu-item"; // Остаемся на той же странице
         }
 
         menuItemRepository.save(item);

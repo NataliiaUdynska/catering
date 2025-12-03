@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Счёт №<span th:text="${invoice.invoiceNumber}"></span></title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 30px; background: #fff; }
+        .header { text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .total { font-weight: bold; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>СЧЁТ-ФАКТУРА</h1>
+    <p><strong>Номер счёта:</strong> <span th:text="${invoice.invoiceNumber}">1</span></p>
+    <p><strong>Дата выставления:</strong> <span th:text="${#temporals.format(invoice.issuedAt, 'dd.MM.yyyy HH:mm')}">05.12.2025 12:00</span></p>
+    <p><strong>Общая сумма:</strong> <span th:text="${invoice.totalAmount}">0.00</span> руб.</p>
+</div>
+
+<div class="info">
+    <p><strong>Клиент:</strong> <span th:text="${invoice.order.user.firstName} + ' ' + ${invoice.order.user.lastName}">Иван Иванов</span></p>
+    <p><strong>Email:</strong> <span th:text="${invoice.order.user.email}">user@example.com</span></p>
+    <p><strong>Дата мероприятия:</strong> <span th:text="${#temporals.format(invoice.order.eventDateTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</span></p>
+    <p><strong>Гостей:</strong> <span th:text="${invoice.order.numberOfGuests}">0</span></p>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Блюдо</th>
+        <th>Кол-во</th>
+        <th>Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${invoice.order.items}">
+        <td th:text="${item.menuItem.name}">Блюдо</td>
+        <td th:text="${item.quantity}">2</td>
+        <td th:text="${item.menuItem.price.multiply(T(java.math.BigDecimal).valueOf(item.quantity))}">60.00</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="2" class="total">ИТОГО</td>
+        <td class="total" th:text="${invoice.totalAmount}">100.00</td>

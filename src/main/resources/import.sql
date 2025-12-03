@@ -39,3 +39,5 @@ INSERT INTO users (email, first_name, last_name, password, role) VALUES ('admin@
 
 INSERT INTO users (email, first_name, last_name, password, role) VALUES ('tom@gmail.com', 'Том', 'Жуков', '$2a$12$Jkkl81yQoOtt7wVnqtp99eK3qutmAlgkzJ3cS2mPAzHkiPWvueGQa', 'CLIENT');
 
+INSERT INTO users (email, first_name, last_name, password, role) VALUES ('nata.udinslaya18@gmail.com', 'Nata', 'Udynska', '$2a$12$Jkkl81yQoOtt7wVnqtp99eK3qutmAlgkzJ3cS2mPAzHkiPWvueGQa', 'CLIENT');
+
