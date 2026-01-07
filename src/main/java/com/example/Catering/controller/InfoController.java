@@ -14,7 +14,7 @@ public class InfoController {
 
     private final ContactService contactService;
 
-    //  Явный конструктор для внедрения зависимости
+    // Конструктор для зависимости
     public InfoController(ContactService contactService) {
         this.contactService = contactService;
     }
@@ -40,7 +40,7 @@ public class InfoController {
             return "contacts";
         }
 
-        contactService.saveContactRequest(contactRequest); // ← вызов метода
+        contactService.saveContactRequest(contactRequest); // вызов метода
         model.addAttribute("success", true);
         model.addAttribute("contactRequest", new ContactRequestDto());
         return "contacts";

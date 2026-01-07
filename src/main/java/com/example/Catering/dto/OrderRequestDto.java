@@ -16,9 +16,9 @@ public class OrderRequestDto {
     private Integer numberOfGuests;
 
     @NotBlank(message = "Адрес мероприятия обязателен")
-    private String deliveryAddress;   // 🔥 изменено с eventAddress
+    private String deliveryAddress;
 
-    private String comment;           // 🔥 изменено с notes
+    private String comment;
 
     private List<OrderItemDto> items = new ArrayList<>();
 

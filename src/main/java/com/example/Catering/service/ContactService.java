@@ -10,7 +10,7 @@ public class ContactService {
 
     private final ContactRequestRepository contactRequestRepository;
 
-    //  Явный конструктор — Spring использует его для внедрения репозитория
+    //  Конструктор для репозитория
     public ContactService(ContactRequestRepository contactRequestRepository) {
         this.contactRequestRepository = contactRequestRepository;
     }

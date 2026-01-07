@@ -38,11 +38,11 @@ public class OrderService {
         order.setEventDateTime(dto.getEventDateTime());
         order.setNumberOfGuests(dto.getNumberOfGuests());
 
-        // 🔥 Важно: сохраняем адрес и комментарий!
+        // Сохраняем адрес и комментарий
         order.setDeliveryAddress(dto.getDeliveryAddress());
         order.setComment(dto.getComment());
 
-        // ===== Добавляем позиции заказа =====
+        // Добавляем позиции заказа
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderRequestDto.OrderItemDto itemDto : dto.getItems()) {
             MenuItem menuItem = menuItemRepository.findById(itemDto.getMenuItemId())

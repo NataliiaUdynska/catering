@@ -36,7 +36,7 @@ public class PdfInvoiceService {
 
             Order order = invoice.getOrder();
 
-            // ===== HEADER =====
+            // Заголовок
             Paragraph title = new Paragraph("INVOICE")
                     .setFontSize(26)
                     .setBold()
@@ -47,7 +47,7 @@ public class PdfInvoiceService {
             document.add(title);
             document.add(new Paragraph("\n"));
 
-            // ===== ORDER INFO =====
+            // Информация заказа
             Table infoTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
             infoTable.setWidth(UnitValue.createPercentValue(100));
 
@@ -60,7 +60,7 @@ public class PdfInvoiceService {
             infoTable.addCell(noBorderCell("EVENT DATE:\n" + order.getEventDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
             infoTable.addCell(noBorderCell("NUMBER OF GUESTS:\n" + order.getNumberOfGuests()));
 
-            // COMMENT (FULL WIDTH)
+            // Комент
             Cell commentCell = new Cell(1, 2)
                     .add(new Paragraph("COMMENT:\n" + (order.getComment() != null && !order.getComment().isBlank() ? order.getComment() : "—")))
                     .setBackgroundColor(COMMENT_BG)
@@ -71,7 +71,7 @@ public class PdfInvoiceService {
             document.add(infoTable);
             document.add(new Paragraph("\n"));
 
-            // ===== ITEMS TABLE =====
+            // Таблица
             Table itemsTable = new Table(UnitValue.createPercentArray(new float[]{1, 5, 2, 2, 2}));
             itemsTable.setWidth(UnitValue.createPercentValue(100));
 
@@ -104,7 +104,7 @@ public class PdfInvoiceService {
             document.add(itemsTable);
             document.add(new Paragraph("\n"));
 
-            // ===== TOTALS =====
+            // Итог
             Table totalsTable = new Table(UnitValue.createPercentArray(new float[]{6, 2}))
                     .setWidth(UnitValue.createPercentValue(50))
                     .setHorizontalAlignment(HorizontalAlignment.RIGHT);
@@ -131,7 +131,7 @@ public class PdfInvoiceService {
         return outputStream.toByteArray();
     }
 
-    // ===== CELL HELPERS =====
+    // Помощники
     private Cell headerCell(String text) {
         return new Cell()
                 .add(new Paragraph(text).setBold())

@@ -43,7 +43,7 @@ public class SecurityConfig {
                                 .clearAuthentication(true)
                                 .permitAll()
                         )
-                        // Для H2 Console (только в dev!)
+                        // Для H2 Console
                         .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                         .headers(headers -> headers.frameOptions().disable());
 

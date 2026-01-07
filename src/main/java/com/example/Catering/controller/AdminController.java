@@ -7,16 +7,18 @@ import com.example.Catering.repository.InvoiceRepository;
 import com.example.Catering.repository.MenuItemRepository;
 import com.example.Catering.repository.OrderRepository;
 import com.example.Catering.service.EmailService;
+import com.example.Catering.service.PdfInvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -27,25 +29,28 @@ public class AdminController {
     private final OrderRepository orderRepository;
     private final InvoiceRepository invoiceRepository;
     private final EmailService emailService;
+    private final PdfInvoiceService pdfInvoiceService;
 
     @Autowired
     public AdminController(MenuItemRepository menuItemRepository,
                            OrderRepository orderRepository,
                            InvoiceRepository invoiceRepository,
-                           EmailService emailService) {
+                           EmailService emailService,
+                           PdfInvoiceService pdfInvoiceService) {
         this.menuItemRepository = menuItemRepository;
         this.orderRepository = orderRepository;
         this.invoiceRepository = invoiceRepository;
         this.emailService = emailService;
+        this.pdfInvoiceService = pdfInvoiceService;
     }
 
+    // Панель управления
     @GetMapping
     public String dashboard() {
         return "admin/dashboard";
     }
 
-    // ============= УПРАВЛЕНИЕ МЕНЮ =============
-
+    // Меню управления
     @GetMapping("/menu")
     public String menu(Model model) {
         model.addAttribute("items", menuItemRepository.findAll());
@@ -54,18 +59,15 @@ public class AdminController {
     }
 
     @PostMapping("/menu")
-    public String addMenuItem(
-            @Valid @ModelAttribute("newItem") MenuItem item,
-            BindingResult result,
-            RedirectAttributes redirectAttributes) {
-
+    public String addMenuItem(@Valid @ModelAttribute("newItem") MenuItem item,
+                              BindingResult result,
+                              RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Ошибка при добавлении блюда");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.newItem", result);
             redirectAttributes.addFlashAttribute("newItem", item);
             return "redirect:/admin/menu";
         }
-
         menuItemRepository.save(item);
         redirectAttributes.addFlashAttribute("message", "Блюдо добавлено!");
         return "redirect:/admin/menu";
@@ -91,22 +93,18 @@ public class AdminController {
     }
 
     @PostMapping("/menu/update")
-    public String updateMenuItem(
-            @Valid @ModelAttribute("item") MenuItem item,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
-
+    public String updateMenuItem(@Valid @ModelAttribute("item") MenuItem item,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "admin/edit-menu-item";
         }
-
         menuItemRepository.save(item);
         redirectAttributes.addFlashAttribute("message", "Блюдо обновлено!");
         return "redirect:/admin/menu";
     }
 
-    // ============= УПРАВЛЕНИЕ ЗАКАЗАМИ =============
-
+    // Управление заказами
     @GetMapping("/orders")
     public String orders(Model model) {
         model.addAttribute("orders", orderRepository.findAll());
@@ -115,10 +113,9 @@ public class AdminController {
     }
 
     @PostMapping("/orders/{id}/status")
-    public String updateOrderStatus(
-            @PathVariable Long id,
-            @RequestParam String statusParam,
-            RedirectAttributes redirectAttributes) {
+    public String updateOrderStatus(@PathVariable Long id,
+                                    @RequestParam String statusParam,
+                                    RedirectAttributes redirectAttributes) {
 
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Заказ с ID " + id + " не найден"));
@@ -135,9 +132,8 @@ public class AdminController {
         order.setStatus(status);
         orderRepository.save(order);
 
-        // Генерация и отправка счёта при статусе CONFIRMED
+        // Генерация и отправка счёта при сCONFIRMED
         if (oldStatus != Order.OrderStatus.CONFIRMED && status == Order.OrderStatus.CONFIRMED) {
-            // Проверяем, что счёт ещё не создан
             if (invoiceRepository.findByOrderId(id) != null) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Счёт уже сгенерирован");
                 return "redirect:/admin/orders";
@@ -152,17 +148,14 @@ public class AdminController {
                 emailService.sendInvoiceEmail(invoice);
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Не удалось отправить счёт по email: " + e.getMessage());
-                // Но всё равно открываем счёт у админа
             }
-
-            // Открытие счёта у админа
-            return "redirect:/admin/orders/" + id + "/view-invoice";
         }
 
         redirectAttributes.addFlashAttribute("message", "Статус заказа обновлён!");
         return "redirect:/admin/orders";
     }
 
+    // Просмотр счет-фактуры
     @GetMapping("/orders/{orderId}/view-invoice")
     public String viewInvoice(@PathVariable Long orderId, Model model) {
         Invoice invoice = invoiceRepository.findByOrderId(orderId);
@@ -171,6 +164,23 @@ public class AdminController {
             return "error";
         }
         model.addAttribute("invoice", invoice);
-        return "admin/invoice";
+        return "admin/invoice"; // HTML preview
+    }
+
+    // Инвойс в PDF
+    @GetMapping("/orders/{orderId}/invoice/pdf")
+    public ResponseEntity<byte[]> getInvoicePdf(@PathVariable Long orderId) {
+        Invoice invoice = invoiceRepository.findByOrderId(orderId);
+        if (invoice == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        byte[] pdfBytes = pdfInvoiceService.generateInvoicePdf(invoice);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=invoice-" + invoice.getInvoiceNumber() + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
     }
 }

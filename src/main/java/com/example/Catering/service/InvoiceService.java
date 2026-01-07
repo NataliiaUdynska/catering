@@ -109,7 +109,7 @@ public class InvoiceService {
 
         byte[] pdfBytes = pdfInvoiceService.generateInvoicePdf(invoice);
 
-        // Прикрепление PDF — правильный способ для Spring Boot 3
+        // Прикрепление PDF
         helper.addAttachment(
                 "invoice_" + invoice.getInvoiceNumber() + ".pdf",
                 new DataSource() {

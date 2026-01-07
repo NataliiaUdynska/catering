@@ -25,7 +25,7 @@ public class MenuController {
             model.addAttribute("menuItems", menuItemRepository.findAllByOrderByNameAsc());
             model.addAttribute("selectedCategory", "all");
         } else {
-            // Ищем по точному (но нечувствительному к регистру) названию из БД
+            // Ищем в БД
             model.addAttribute("menuItems", menuItemRepository.findByCategoryIgnoreCaseOrderByNameAsc(category));
             model.addAttribute("selectedCategory", category);
         }

@@ -59,7 +59,7 @@ public class EmailService {
             mailSender.send(message);
 
         } catch (MessagingException e) {
-            e.printStackTrace(); // Логируйте ошибку
+            e.printStackTrace(); // Логируем ошибку
         }
     }
 }

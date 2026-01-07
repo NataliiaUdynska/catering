@@ -23,7 +23,7 @@ public class ContactRequest {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Конструктор по умолчанию (обязателен для JPA)
+    // Конструктор по умолчанию для JPA
     public ContactRequest() {}
 
     // Геттеры и сеттеры

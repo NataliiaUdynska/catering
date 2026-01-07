@@ -30,7 +30,7 @@ public class OrderController {
         this.userRepository = userRepository;
     }
 
-    // ===== Показ формы заказа =====
+    //Показ формы заказа
     @GetMapping
     public String showOrderForm(Authentication authentication, HttpSession session, Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -49,7 +49,7 @@ public class OrderController {
         return "order-form";
     }
 
-    // ===== Создание заказа =====
+    // Создание заказа
     @PostMapping
     public String createOrder(
             Authentication authentication,
@@ -81,7 +81,7 @@ public class OrderController {
             return "order-form";
         }
 
-        // ===== Преобразуем корзину в позиции заказа =====
+        // Преобразуем корзину в позиции заказа
         List<OrderRequestDto.OrderItemDto> items = new ArrayList<>();
         for (CartItemDto cartItem : cart) {
             OrderRequestDto.OrderItemDto itemDto = new OrderRequestDto.OrderItemDto();
@@ -92,13 +92,13 @@ public class OrderController {
         orderDto.setItems(items);
 
         try {
-            // ===== Создаем заказ =====
+            // Создаем заказ
             orderService.createOrder(user, orderDto);
 
-            // ===== Очистка корзины =====
+            // Очистка корзины
             session.removeAttribute("cart");
 
-            // ===== Перенаправление с сообщением об успехе =====
+            // Перенаправление с сообщением об успехе
             return "redirect:/profile?orderSuccess=true";
 
         } catch (Exception e) {

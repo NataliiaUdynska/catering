@@ -1,139 +1,152 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en"> <head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>Admin — Orders</title> <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background: #f7f7f7;
-    }
+    <title>Admin — Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f7f7f7;
+        }
 
-    .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        background: #fff;
-        padding: 30px;
-        border-radius: 14px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-    }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
 
-    h1 {
-        text-align: center;
-        color: #444;
-        margin-bottom: 25px;
-    }
+        h1 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 25px;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
-    th, td {
-        padding: 12px;
-        border-bottom: 1px solid #eee;
-        text-align: left;
-    }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
 
-    th {
-        background: #f5f6f8;
-        color: #555;
-    }
+        th {
+            background: #f5f6f8;
+            color: #555;
+        }
 
-    tr:hover {
-        background: #fafafa;
-    }
+        tr:hover {
+            background: #fafafa;
+        }
 
-    .status {
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 0.9em;
-        text-transform: uppercase;
-    }
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
 
-    .status-pending { background: #fff4e5; color: #c27c0e; }
-    .status-confirmed { background: #e5f0ff; color: #0e4ac2; }
-    .status-completed { background: #e6f7ed; color: #1b8a3d; }
-    .status-cancelled { background: #fdeaea; color: #c20e0e; }
+        .status-pending { background: #fff4e5; color: #c27c0e; }
+        .status-confirmed { background: #e5f0ff; color: #0e4ac2; }
+        .status-completed { background: #e6f7ed; color: #1b8a3d; }
+        .status-cancelled { background: #fdeaea; color: #c20e0e; }
 
-    select {
-        padding: 6px 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+        select {
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    button {
-        padding: 6px 12px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+        button, .pdf-link {
+            padding: 6px 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
 
-    button:hover {
-        background: #0056b3;
-    }
+        button:hover, .pdf-link:hover {
+            background: #0056b3;
+        }
 
-    .back-link {
-        display: block;
-        margin-top: 25px;
-        text-align: center;
-        color: #007bff;
-        text-decoration: none;
-    }
+        .back-link {
+            display: block;
+            margin-top: 25px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
 
-    .back-link:hover {
-        text-decoration: underline;
-    }
+        .back-link:hover {
+            text-decoration: underline;
+        }
 
-    ul {
-        margin: 0;
-        padding-left: 16px;
-    }
-</style>
+        ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h1>All Orders</h1> <table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>User</th> <th>Event Date</th> <th>Guests</th> <th>Status</th> <th>Dishes</th> <th>Action</th> </tr>
-    </thead>
-    <tbody>
-    <tr th:each="order : ${orders}">
-        <td th:text="${order.id}">1</td>
-        <td th:text="${order.user.email}">user@example.com</td>
-        <td th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</td>
-        <td th:text="${order.numberOfGuests}">4</td>
-        <td>
+    <h1>All Orders</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Event Date</th>
+            <th>Guests</th>
+            <th>Status</th>
+            <th>Dishes</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}">1</td>
+            <td th:text="${order.user.email}">user@example.com</td>
+            <td th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</td>
+            <td th:text="${order.numberOfGuests}">4</td>
+            <td>
                 <span th:text="${order.status}"
-                      th:class="${'status status-' + #strings.toLowerCase(order.status)}">
-                </span>
-        </td>
-        <td>
-            <ul>
-                <li th:each="item : ${order.items}"
-                    th:text="${item.menuItem.name} + ' — ' + ${item.quantity} + ' pcs.'"> Dish — 2 pcs.
-                </li>
-            </ul>
-        </td>
-        <td>
-            <form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post">
-                <select name="statusParam" onchange="this.form.submit()">
-                    <option th:each="s : ${statuses}"
-                            th:value="${s}"
-                            th:text="${s}"
-                            th:selected="${s == order.status}">PENDING</option>
-                </select>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                      th:class="${'status status-' + #strings.toLowerCase(order.status)}"></span>
+            </td>
+            <td>
+                <ul>
+                    <li th:each="item : ${order.items}"
+                        th:text="${item.menuItem.name} + ' — ' + ${item.quantity} + ' pcs.'">Dish — 2 pcs.</li>
+                </ul>
+            </td>
+            <td>
+                <!-- Статус -->
+                <form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post">
+                    <select name="statusParam" onchange="this.form.submit()">
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"
+                                th:selected="${s == order.status}">PENDING</option>
+                    </select>
+                </form>
+                <br>
+                <!-- Кнопка для PDF -->
+                <a th:href="@{'/admin/orders/' + ${order.id} + '/invoice/pdf'}"
+                   class="pdf-link" target="_blank">Open PDF</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-    <a href="/" class="back-link">← Back to Home</a> </div>
+    <a href="/" class="back-link">← Back to Home</a>
+</div>
 </body>
 </html>
