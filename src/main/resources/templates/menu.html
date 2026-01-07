@@ -1,162 +1,93 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Наше меню</title>
+    <title>Our Menu</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background: #f4f4f4;
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
+        h1 { text-align: center; color: #4b6149; }
+        .filter { text-align: center; margin-bottom: 20px; }
+        .filter a {
+            padding: 10px 18px; margin: 5px; border-radius: 6px; text-decoration: none;
+            background: #6b8e77; color: white; transition: 0.2s; display: inline-block;
         }
-        h1 {
-            text-align: center;
-            color: #4b6149;
-        }
-        .filter {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .filter button {
-            padding: 10px 18px;
-            border: none;
-            background: #6b8e77;
-            color: white;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: .2s;
-        }
-        .filter button:hover {
-            background: #55745e;
-        }
+        .filter a.active { background: #3e5241; font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .filter a:hover { background: #55745e; }
         .menu-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 24px;
         }
-        .item {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-            transition: .2s;
-            position: relative;
-        }
-        .item:hover { transform: scale(1.02); }
-        .name {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        .description {
-            font-size: 0.95em;
-            color: #555;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
-        .price {
-            color: #6b8e77;
-            font-weight: bold;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-        }
-        .category {
-            color: #777;
-            font-size: 0.85em;
-            margin-bottom: 16px;
-        }
-        .cart-form {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .cart-form input {
-            width: 60px;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .cart-form button {
-            padding: 6px 12px;
-            background: #6b8e77;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-        .cart-form button:hover {
-            background: #55745e;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 30px;
-            text-decoration: none;
-            color: #6b8e77;
-            font-weight: bold;
-        }
-        a:hover { color: #4a6e57; }
+        .item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
+        .name { font-size: 1.2em; font-weight: bold; margin-bottom: 8px; color: #333; }
+        .description { font-size: 0.95em; color: #555; margin-bottom: 12px; line-height: 1.4; min-height: 40px; }
+        .price { color: #6b8e77; font-weight: bold; margin-bottom: 12px; font-size: 1.1em; }
+        .category-label { color: #999; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .cart-form { display: flex; gap: 8px; align-items: center; }
+        .cart-form input { width: 50px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+        .cart-form button { padding: 6px 12px; background: #6b8e77; color: white; border: none; border-radius: 4px; cursor: pointer; flex-grow: 1; }
+        .cart-form button:hover { background: #55745e; }
+        .cart-link-container { text-align: center; margin: 20px 0; }
+        .cart-link { text-decoration: none; color: white; padding: 10px 25px; background: #4b6149; border-radius: 6px; display: inline-block; }
     </style>
 </head>
 <body>
 
-<h1>Наше меню</h1>
+<h1>Our Menu</h1>
 
-<!-- Фильтр -->
 <div class="filter">
-    <button onclick="filterMenu('all')">Все</button>
-    <button onclick="filterMenu('Салаты')">Салаты</button>
-    <button onclick="filterMenu('Супы')">Супы</button>
-    <button onclick="filterMenu('Горячее')">Горячее</button>
-    <button onclick="filterMenu('Закуски')">Закуски</button>
-    <button onclick="filterMenu('Напитки')">Напитки</button>
-    <button onclick="filterMenu('Десерты')">Десерты</button>
+    <a th:href="@{/menu(category='all')}"
+       th:classappend="${selectedCategory == 'all'} ? ' active'">All</a>
+
+    <a th:href="@{/menu(category='Salads')}"
+       th:classappend="${selectedCategory == 'Salads'} ? ' active'">Salads</a>
+
+    <a th:href="@{/menu(category='Soups')}"
+       th:classappend="${selectedCategory == 'Soups'} ? ' active'">Soups</a>
+
+    <a th:href="@{/menu(category='Main Courses')}"
+       th:classappend="${selectedCategory == 'Main Courses'} ? ' active'">Main</a>
+
+    <a th:href="@{/menu(category='Appetizers')}"
+       th:classappend="${selectedCategory == 'Appetizers'} ? ' active'">Snacks</a>
+
+    <a th:href="@{/menu(category='Drinks')}"
+       th:classappend="${selectedCategory == 'Drinks'} ? ' active'">Drinks</a>
+
+    <a th:href="@{/menu(category='Desserts')}"
+       th:classappend="${selectedCategory == 'Desserts'} ? ' active'">Desserts</a>
 </div>
 
-<div th:if="${successMessage}" style="color: green; margin-bottom: 15px;">
-    <strong th:text="${successMessage}">Блюдо добавлено!</strong>
-</div>
-
-<div style="text-align: center; margin-top: 20px;">
-    <a href="/cart" style="padding: 10px 20px; background: #6b8e77; color: white; text-decoration: none; border-radius: 6px;">
-        Перейти в корзину
-    </a>
+<div class="cart-link-container">
+    <a href="/cart" class="cart-link">Go to Cart</a>
 </div>
 
 <hr>
 
 <div class="menu-container">
-    <div class="item" th:each="item : ${menuItems}" th:attr="data-category=${item.category}">
-        <div class="name" th:text="${item.name}">Название блюда</div>
-        <div class="description" th:text="${item.description}">Описание блюда</div>
-        <div class="price" th:text="|Цена: ${#numbers.formatCurrency(item.price)}|">Цена</div>
-        <div class="category" th:text="${item.category}">Категория</div>
+    <div th:if="${#lists.isEmpty(menuItems)}" style="grid-column: 1/-1; text-align: center; padding: 40px; color: #777;">
+        No items found in this category.
+    </div>
 
-        <!-- Форма добавления в корзину -->
-        <form th:action="@{/cart/add?redirect=/menu}" method="post" class="cart-form">
+    <div class="item" th:each="item : ${menuItems}">
+        <div class="name" th:text="${item.name}">Item Name</div>
+        <div class="description" th:text="${item.description}">Description</div>
+        <div class="price" th:text="|$${#numbers.formatDecimal(item.price, 1, 2)}|">$0.00</div>
+        <div class="category-label" th:text="${item.category}">Category</div>
+
+        <form th:action="@{/cart/add(redirect='/menu')}" method="post" class="cart-form">
             <input type="hidden" name="menuItemId" th:value="${item.id}" />
             <input type="number" name="quantity" value="1" min="1" />
-            <button type="submit">В корзину</button>
+            <button type="submit">Add to Cart</button>
         </form>
     </div>
 </div>
 
-<script>
-    function filterMenu(category) {
-        document.querySelectorAll(".item").forEach(item => {
-            item.style.display = (category === "all" || item.dataset.category === category)
-                ? "block"
-                : "none";
-        });
-    }
-</script>
+<div style="margin-top: 40px;">
+    <a href="/" style="text-decoration: none; color: #6b8e77; font-weight: bold;">← Home</a>
+    <span style="margin: 0 10px; color: #ccc;">|</span>
+    <a href="/cart" style="text-decoration: none; color: #6b8e77; font-weight: bold;">My Cart</a>
+</div>
 
-<hr>
-<a href="/">← На главную</a> |
-<a href="/cart" style="margin-left: 15px;">Моя корзина</a>
 </body>
 </html>

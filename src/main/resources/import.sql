@@ -1,43 +1,45 @@
-INSERT INTO menu_items (name, description, price, category) VALUES ('Салат Цезарь', 'Курица, салат ромен, пармезан, соус Цезарь', 10.50, 'Салаты');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Тёплый салат с говядиной', 'Говядина, овощи, терияки', 12.90, 'Салаты');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Салат Греческий', 'Овощи, фета, оливки', 8.90, 'Салаты');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Салат с креветками', 'Креветки, салат, соус лайм-чеснок', 13.50, 'Салаты');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Caesar Salad', 'Chicken, romaine lettuce, parmesan, Caesar dressing', 10.50, 'Salads');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Warm Beef Salad', 'Beef, vegetables, teriyaki', 12.90, 'Salads');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Greek Salad', 'Vegetables, feta, olives', 8.90, 'Salads');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Shrimp Salad', 'Shrimp, salad greens, lime-garlic sauce', 13.50, 'Salads');
 
-INSERT INTO menu_items (name, description, price, category) VALUES ('Борщ украинский', 'Традиционный суп со сметаной', 7.50, 'Супы');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Том Ям', 'Острый суп с креветками и кокосом', 11.90, 'Супы');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Крем-суп грибной', 'Шампиньоны, сливки', 7.90, 'Супы');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Куриный суп-лапша', 'Домашняя лапша, курица', 6.90, 'Супы');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Ukrainian Borscht', 'Traditional soup with sour cream', 7.50, 'Soups');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Tom Yum', 'Spicy soup with shrimp and coconut', 11.90, 'Soups');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Mushroom Cream Soup', 'Champignons, cream', 7.90, 'Soups');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Chicken Noodle Soup', 'Homemade noodles, chicken', 6.90, 'Soups');
 
-INSERT INTO menu_items (name, description, price, category) VALUES ('Стейк Рибай', 'Стейк говяжий с розмарином', 24.50, 'Горячее');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Лосось на гриле', 'Филе лосося, лимон', 19.80, 'Горячее');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Курица в сливочном соусе', 'Курица, грибы, сливки', 14.50, 'Горячее');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Паста Карбонара', 'Паста, бекон, сливки, пармезан', 11.90, 'Горячее');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Паста с креветками', 'Фетучини, креветки, сливочный соус', 14.80, 'Горячее');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Ризотто с грибами', 'Рис арборио, грибы, сливки', 12.50, 'Горячее');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Котлета по-киевски', 'Курица с маслом внутри', 13.20, 'Горячее');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Ribeye Steak', 'Beef steak with rosemary', 24.50, 'Main Courses');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Grilled Salmon', 'Salmon fillet, lemon', 19.80, 'Main Courses');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Chicken in Cream Sauce', 'Chicken, mushrooms, cream', 14.50, 'Main Courses');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Pasta Carbonara', 'Pasta, bacon, cream, parmesan', 11.90, 'Main Courses');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Pasta with Shrimp', 'Fettuccine, shrimp, cream sauce', 14.80, 'Main Courses');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Mushroom Risotto', 'Arborio rice, mushrooms, cream', 12.50, 'Main Courses');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Chicken Kiev', 'Chicken with butter inside', 13.20, 'Main Courses');
 
-INSERT INTO menu_items (name, description, price, category) VALUES ('Брускетта с лососем', 'Хлеб, лосось, сливочный сыр', 8.20, 'Закуски');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Карпаччо из говядины', 'Тонко нарезанная говядина, пармезан', 12.90, 'Закуски');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Сырная тарелка', 'Ассорти европейских сыров', 14.40, 'Закуски');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Хумус с питой', 'Домашний хумус, теплая пита', 7.20, 'Закуски');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Тартар из тунца', 'Тунец, лайм, кунжут', 13.80, 'Закуски');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Salmon Bruschetta', 'Bread, salmon, cream cheese', 8.20, 'Appetizers');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Beef Carpaccio', 'Thinly sliced beef, parmesan', 12.90, 'Appetizers');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Cheese Platter', 'Assorted European cheeses', 14.40, 'Appetizers');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Hummus with Pita', 'Homemade hummus, warm pita', 7.20, 'Appetizers');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Tuna Tartare', 'Tuna, lime, sesame', 13.80, 'Appetizers');
 
-INSERT INTO menu_items (name, description, price, category) VALUES ('Лимонад домашний', 'Лимон, мята, сироп', 3.90, 'Напитки');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Ягодный морс', 'Морс из лесных ягод', 3.50, 'Напитки');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Чай черный/зелёный', 'Натуральный листовой чай', 2.90, 'Напитки');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Эспрессо', 'Итальянский кофе', 2.50, 'Напитки');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Капучино', 'Кофе с молоком', 3.20, 'Напитки');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Апельсиновый фреш', 'Свежевыжатый сок', 4.90, 'Напитки');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Homemade Lemonade', 'Lemon, mint, syrup', 3.90, 'Drinks');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Berry Drink', 'Wild berry fruit drink', 3.50, 'Drinks');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Black/Green Tea', 'Natural loose-leaf tea', 2.90, 'Drinks');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Espresso', 'Italian coffee', 2.50, 'Drinks');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Cappuccino', 'Coffee with milk', 3.20, 'Drinks');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Fresh Orange Juice', 'Freshly squeezed juice', 4.90, 'Drinks');
 
-INSERT INTO menu_items (name, description, price, category) VALUES ('Тирамису', 'Кофейный десерт с маскарпоне', 5.80, 'Десерты');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Чизкейк Нью-Йорк', 'Классический чизкейк', 5.50, 'Десерты');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Эклер ванильный', 'Заварное тесто, крем', 3.80, 'Десерты');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Наполеон', 'Слоёный торт с кремом', 4.80, 'Десерты');
-INSERT INTO menu_items (name, description, price, category) VALUES ('Панна-котта', 'Сливочный итальянский десерт', 5.20, 'Десерты');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Tiramisu', 'Coffee dessert with mascarpone', 5.80, 'Desserts');
+INSERT INTO menu_items (name, description, price, category) VALUES ('New York Cheesecake', 'Classic cheesecake', 5.50, 'Desserts');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Vanilla Éclair', 'Choux pastry, cream', 3.80, 'Desserts');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Napoleon Cake', 'Layered cake with cream', 4.80, 'Desserts');
+INSERT INTO menu_items (name, description, price, category) VALUES ('Panna Cotta', 'Creamy Italian dessert', 5.20, 'Desserts');
 
 INSERT INTO users (email, first_name, last_name, password, role) VALUES ('admin@example.com', 'Админ', 'Системный', '$2a$12$3Gg14f0D5fzelZY1GS.FeebNl/QDCuYLFCZMAtz7cZFAL9Z8CHJV6', 'ADMIN');
 
 INSERT INTO users (email, first_name, last_name, password, role) VALUES ('tom@gmail.com', 'Том', 'Жуков', '$2a$12$Jkkl81yQoOtt7wVnqtp99eK3qutmAlgkzJ3cS2mPAzHkiPWvueGQa', 'CLIENT');
 
-INSERT INTO users (email, first_name, last_name, password, role) VALUES ('nata.udinslaya18@gmail.com', 'Nata', 'Udynska', '$2a$12$Jkkl81yQoOtt7wVnqtp99eK3qutmAlgkzJ3cS2mPAzHkiPWvueGQa', 'CLIENT');
+INSERT INTO users (email, first_name, last_name, password, role) VALUES ('nata.udinslaya18@gmail.com', 'Nata', 'Udynska', '$2a$12$3Gg14f0D5fzelZY1GS.FeebNl/QDCuYLFCZMAtz7cZFAL9Z8CHJV6', 'CLIENT');
+
+
 

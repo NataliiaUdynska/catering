@@ -1,76 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
-<head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"> <head>
     <meta charset="UTF-8">
-    <title>Заказ оформлен</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f4f7f8;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 80px auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        h1 {
-            color: #2f6846;
-            margin-bottom: 20px;
-        }
-        .success-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-            color: #6bb587;
-        }
-        p {
-            font-size: 18px;
-            color: #444;
-            line-height: 1.6;
-            margin: 15px 0;
-        }
-        .email-note {
-            background: #f0f7f4;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 25px 0;
-            color: #264d3b;
-            font-style: italic;
-        }
-        .btn-home {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 28px;
-            background: #2f6846;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .btn-home:hover {
-            background: #25563a;
-        }
-    </style>
+    <title>Order Confirmed</title> <style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f4f7f8;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 600px;
+        margin: 80px auto;
+        background: #fff;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    h1 {
+        color: #2f6846;
+        margin-bottom: 20px;
+    }
+    .success-icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        color: #6bb587;
+    }
+    p {
+        font-size: 18px;
+        color: #444;
+        line-height: 1.6;
+        margin: 15px 0;
+    }
+    .email-note {
+        background: #f0f7f4;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 25px 0;
+        color: #264d3b;
+        font-style: italic;
+    }
+    .btn-home {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 28px;
+        background: #2f6846;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    .btn-home:hover {
+        background: #25563a;
+    }
+</style>
 </head>
 <body>
 <div class="container">
-    <div class="success-icon">  </div>
-    <h1>Заказ успешно оформлен!</h1>
-
-    <p>Спасибо за ваш заказ.</p>
-
-    <div class="email-note">
-        Счёт-фактура и подтверждение заказа будут отправлены на вашу электронную почту.
-    </div>
-
-    <p>Если у вас есть вопросы — напишите нам.</p>
-
-    <a href="/" class="btn-home">На главную</a>
+    <div class="success-icon">✔️</div>
+    <h1>Order placed successfully!</h1> <p>Thank you for your order.</p> <div class="email-note">
+    An invoice and order confirmation will be sent to your email.
 </div>
+
+    <p>If you have any questions, please contact us.</p> <a href="/" class="btn-home">Back to Home</a> </div>
 </body>
 </html>

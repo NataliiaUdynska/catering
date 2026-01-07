@@ -29,72 +29,23 @@ public class AdminController {
     private final EmailService emailService;
 
     @Autowired
-    public AdminController(MenuItemRepository menuItemRepository, OrderRepository orderRepository,
-                           InvoiceRepository invoiceRepository, EmailService emailService) {
+    public AdminController(MenuItemRepository menuItemRepository,
+                           OrderRepository orderRepository,
+                           InvoiceRepository invoiceRepository,
+                           EmailService emailService) {
         this.menuItemRepository = menuItemRepository;
         this.orderRepository = orderRepository;
         this.invoiceRepository = invoiceRepository;
         this.emailService = emailService;
     }
 
-    @GetMapping("/orders")
-    public String orders(Model model) {
-        model.addAttribute("orders", orderRepository.findAll());
-        model.addAttribute("statuses", Order.OrderStatus.values());
-        return "admin/orders";
-    }
-
-    @PostMapping("/orders/{id}/status")
-    public String updateOrderStatus(
-            @PathVariable Long id,
-            @RequestParam String statusParam,
-            RedirectAttributes redirectAttributes) {
-
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Заказ с ID " + id + " не найден"));
-
-        Order.OrderStatus status;
-        try {
-            status = Order.OrderStatus.valueOf(statusParam);
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Недопустимый статус: " + statusParam);
-            return "redirect:/admin/orders";
-        }
-
-        Order.OrderStatus oldStatus = order.getStatus();
-
-        order.setStatus(status);
-        orderRepository.save(order);
-
-        // Генерация и отправка счёта при изменении статуса на CONFIRMED
-        if (oldStatus != Order.OrderStatus.CONFIRMED && status == Order.OrderStatus.CONFIRMED) {
-            Invoice invoice = new Invoice(order);
-            invoice.setStatus("SENT");
-            invoiceRepository.save(invoice);
-
-            // Отправка email клиенту
-            emailService.sendInvoiceEmail(invoice);
-
-            // Перенаправление на страницу просмотра счёта
-            return "redirect:/admin/orders/" + id + "/view-invoice";
-        }
-
-        redirectAttributes.addFlashAttribute("message", "Статус заказа обновлён!");
-        return "redirect:/admin/orders";
-    }
-
-    @GetMapping("/orders/{orderId}/view-invoice")
-    public String viewInvoice(@PathVariable Long orderId, Model model) {
-        Invoice invoice = invoiceRepository.findByOrderId(orderId);
-        if (invoice == null) {
-            model.addAttribute("errorMessage", "Счёт не найден");
-            return "error";
-        }
-        model.addAttribute("invoice", invoice);
-        return "admin/invoice";
+    @GetMapping
+    public String dashboard() {
+        return "admin/dashboard";
     }
 
     // ============= УПРАВЛЕНИЕ МЕНЮ =============
+
     @GetMapping("/menu")
     public String menu(Model model) {
         model.addAttribute("items", menuItemRepository.findAll());
@@ -105,12 +56,12 @@ public class AdminController {
     @PostMapping("/menu")
     public String addMenuItem(
             @Valid @ModelAttribute("newItem") MenuItem item,
-            BindingResult bindingResult,
+            BindingResult result,
             RedirectAttributes redirectAttributes) {
 
-        if (bindingResult.hasErrors()) {
+        if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Ошибка при добавлении блюда");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.newItem", bindingResult);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.newItem", result);
             redirectAttributes.addFlashAttribute("newItem", item);
             return "redirect:/admin/menu";
         }
@@ -146,11 +97,80 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            return "admin/edit-menu-item"; // Остаемся на той же странице
+            return "admin/edit-menu-item";
         }
 
         menuItemRepository.save(item);
         redirectAttributes.addFlashAttribute("message", "Блюдо обновлено!");
         return "redirect:/admin/menu";
+    }
+
+    // ============= УПРАВЛЕНИЕ ЗАКАЗАМИ =============
+
+    @GetMapping("/orders")
+    public String orders(Model model) {
+        model.addAttribute("orders", orderRepository.findAll());
+        model.addAttribute("statuses", Order.OrderStatus.values());
+        return "admin/orders";
+    }
+
+    @PostMapping("/orders/{id}/status")
+    public String updateOrderStatus(
+            @PathVariable Long id,
+            @RequestParam String statusParam,
+            RedirectAttributes redirectAttributes) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Заказ с ID " + id + " не найден"));
+
+        Order.OrderStatus status;
+        try {
+            status = Order.OrderStatus.valueOf(statusParam);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Недопустимый статус: " + statusParam);
+            return "redirect:/admin/orders";
+        }
+
+        Order.OrderStatus oldStatus = order.getStatus();
+        order.setStatus(status);
+        orderRepository.save(order);
+
+        // Генерация и отправка счёта при статусе CONFIRMED
+        if (oldStatus != Order.OrderStatus.CONFIRMED && status == Order.OrderStatus.CONFIRMED) {
+            // Проверяем, что счёт ещё не создан
+            if (invoiceRepository.findByOrderId(id) != null) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Счёт уже сгенерирован");
+                return "redirect:/admin/orders";
+            }
+
+            Invoice invoice = new Invoice(order);
+            invoice.setStatus("SENT");
+            invoiceRepository.save(invoice);
+
+            // Отправка email клиенту
+            try {
+                emailService.sendInvoiceEmail(invoice);
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Не удалось отправить счёт по email: " + e.getMessage());
+                // Но всё равно открываем счёт у админа
+            }
+
+            // Открытие счёта у админа
+            return "redirect:/admin/orders/" + id + "/view-invoice";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "Статус заказа обновлён!");
+        return "redirect:/admin/orders";
+    }
+
+    @GetMapping("/orders/{orderId}/view-invoice")
+    public String viewInvoice(@PathVariable Long orderId, Model model) {
+        Invoice invoice = invoiceRepository.findByOrderId(orderId);
+        if (invoice == null) {
+            model.addAttribute("errorMessage", "Счёт не найден. Статус заказа может быть не CONFIRMED.");
+            return "error";
+        }
+        model.addAttribute("invoice", invoice);
+        return "admin/invoice";
     }
 }

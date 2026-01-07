@@ -1,273 +1,243 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
-<head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en"> <head>
     <meta charset="UTF-8">
-    <title>Мой профиль</title>
+    <title>My Profile</title> <style>
+    body {
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        background: #eef1f3;
+        padding: 30px;
+        color: #3b3b3b;
+    }
 
-    <style>
-        body {
-            font-family: "Inter", "Segoe UI", Arial, sans-serif;
-            margin: 0;
-            background: #eef1f3;
-            padding: 30px;
-            color: #3b3b3b;
-        }
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+    }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
+    /* Card Styles */ /* Общий стиль карточек */
+    .profile-card, .orders-card {
+        background: #ffffff;
+        padding: 35px 40px;
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-        /* Общий стиль карточек */
-        .profile-card, .orders-card {
-            background: #ffffff;
-            padding: 35px 40px;
-            border-radius: 18px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    .profile-card:hover, .orders-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
 
-        .profile-card:hover, .orders-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-        }
+    /* Headings */ /* Заголовки */
+    h1 {
+        font-size: 30px;
+        margin-bottom: -5px;
+        color: #2f4236;
+        text-align: center;
+        letter-spacing: 0.5px;
+    }
 
-        /* Заголовки */
-        h1 {
-            font-size: 30px;
-            margin-bottom: -5px;
-            color: #2f4236;
-            text-align: center;
-            letter-spacing: 0.5px;
-        }
+    .line {
+        height: 3px;
+        width: 80px;
+        background: #2f4236;
+        margin: 16px auto 25px auto;
+        border-radius: 4px;
+    }
 
-        .line {
-            height: 3px;
-            width: 80px;
-            background: #2f4236;
-            margin: 16px auto 25px auto;
-            border-radius: 4px;
-        }
+    .info {
+        margin: 14px 0;
+        font-size: 19px;
+        color: #4d4d4d;
+    }
 
-        .info {
-            margin: 14px 0;
-            font-size: 19px;
-            color: #4d4d4d;
-        }
+    .label {
+        font-weight: 600;
+        color: #7e7e7e;
+        margin-right: 6px;
+    }
 
-        .label {
-            font-weight: 600;
-            color: #7e7e7e;
-            margin-right: 6px;
-        }
+    .role {
+        font-weight: 600;
+        color: #2f4236;
+    }
 
-        .role {
-            font-weight: 600;
-            color: #2f4236;
-        }
+    /* Admin Links */ /* Верхние ссылки админки */
+    .admin-panel a {
+        display: inline-block;
+        padding: 12px 22px;
+        background: #2f4236;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 10px;
+        margin: 0 4px;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+    .admin-panel a:hover {
+        background: #233628;
+    }
 
-        /* Верхние ссылки админки */
-        .admin-panel a {
-            display: inline-block;
-            padding: 12px 22px;
-            background: #2f4236;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 10px;
-            margin: 0 4px;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-        .admin-panel a:hover {
-            background: #233628;
-        }
+    /* Buttons */ /* Кнопки */
+    .btn-block {
+        margin-top: 28px;
+        text-align: center;
+    }
 
-        /* Кнопки */
-        .btn-block {
-            margin-top: 28px;
-            text-align: center;
-        }
+    form button, a.home {
+        padding: 12px 26px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.25s ease;
+        margin: 0 8px;
+    }
 
-        form button, a.home {
-            padding: 12px 26px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.25s ease;
-            margin: 0 8px;
-        }
+    .logout {
+        background: #dddddd;
+        color: #333;
+    }
+    .logout:hover {
+        background: #cacaca;
+        transform: translateY(-3px);
+    }
 
-        .logout {
-            background: #dddddd;
-            color: #333;
-        }
-        .logout:hover {
-            background: #cacaca;
-            transform: translateY(-3px);
-        }
+    .home {
+        background: #2f4236;
+        color: white !important;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .home:hover {
+        background: #233628;
+        transform: translateY(-3px);
+    }
 
-        .home {
-            background: #2f4236;
-            color: white !important;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .home:hover {
-            background: #233628;
-            transform: translateY(-3px);
-        }
+    /* Orders */ /* Заказы */
+    .order {
+        padding: 25px;
+        margin-bottom: 22px;
+        border-radius: 14px;
+        background: #fafafa;
+        border-left: 6px solid #2f4236;
+        transition: 0.2s;
+    }
 
-        /* Заказы */
-        .order {
-            padding: 25px;
-            margin-bottom: 22px;
-            border-radius: 14px;
-            background: #fafafa;
-            border-left: 6px solid #2f4236;
-            transition: 0.2s;
-        }
+    .order:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
 
-        .order:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
+    .order h3 {
+        margin: 0 0 12px 0;
+        color: #2f4236;
+        font-size: 22px;
+    }
 
-        .order h3 {
-            margin: 0 0 12px 0;
-            color: #2f4236;
-            font-size: 22px;
-        }
+    .order p {
+        margin: 6px 0;
+        font-size: 17px;
+    }
 
-        .order p {
-            margin: 6px 0;
-            font-size: 17px;
-        }
+    .no-orders {
+        color: #888;
+        font-style: italic;
+        text-align: center;
+    }
 
-        .no-orders {
-            color: #888;
-            font-style: italic;
-            text-align: center;
-        }
+    /* Order Button */ /* Кнопка оформления заказа */
+    .order-btn {
+        background: #2f4236;
+        padding: 14px 32px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 17px;
+        transition: 0.25s;
+    }
+    .order-btn:hover {
+        background: #233628;
+        transform: translateY(-3px);
+    }
 
-        /* Кнопка оформления заказа */
-        .order-btn {
-            background: #2f4236;
-            padding: 14px 32px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 17px;
-            transition: 0.25s;
-        }
-        .order-btn:hover {
-            background: #233628;
-            transform: translateY(-3px);
-        }
+    .order ul {
+        margin-top: 8px;
+        padding-left: 22px;
+    }
 
-        .order ul {
-            margin-top: 8px;
-            padding-left: 22px;
-        }
-
-        .order li {
-            margin-bottom: 4px;
-            font-size: 16px;
-        }
-    </style>
+    .order li {
+        margin-bottom: 4px;
+        font-size: 16px;
+    }
+</style>
 </head>
 
 <body>
 <div class="container">
 
-    <!-- Панель админа -->
     <div class="admin-panel" sec:authorize="hasAnyRole('ADMIN','STAFF')" style="text-align:center;">
-        <a href="/admin/orders">Админка: Заказы</a>
-        <a href="/admin/menu">Админка: Меню</a>
-    </div>
+        <a href="/admin/orders">Admin: Orders</a> <a href="/admin/menu">Admin: Menu</a> </div>
 
-    <!-- Профиль -->
     <div class="profile-card">
-        <h1>Мой профиль</h1>
-        <div class="line"></div>
+        <h1>My Profile</h1> <div class="line"></div>
 
         <div class="info">
-            <span class="label">Имя:</span>
-            <span th:text="${user.firstName}">Имя</span>
+            <span class="label">First Name:</span> <span th:text="${user.firstName}">Name</span>
         </div>
 
         <div class="info">
-            <span class="label">Фамилия:</span>
-            <span th:text="${user.lastName}">Фамилия</span>
+            <span class="label">Last Name:</span> <span th:text="${user.lastName}">Last Name</span>
         </div>
 
         <div class="info">
-            <span class="label">Email:</span>
-            <span th:text="${user.email}">email@example.com</span>
+            <span class="label">Email:</span> <span th:text="${user.email}">email@example.com</span>
         </div>
 
         <div class="info">
-            <span class="label">Роль:</span>
-            <span th:text="${user.role}" class="role">Клиент</span>
-        </div>
+            <span class="label">Role:</span> <span th:text="${user.role}" class="role">Client</span> </div>
 
         <div class="btn-block">
             <form th:action="@{/logout}" method="post" style="display:inline;">
-                <button type="submit" class="logout">Выйти</button>
-            </form>
-            <a href="/" class="home">На главную</a>
-        </div>
+                <button type="submit" class="logout">Logout</button> </form>
+            <a href="/" class="home">Home</a> </div>
     </div>
 
-    <!-- История заказов -->
     <div class="orders-card">
-        <h1>История заказов</h1>
-        <div class="line"></div>
+        <h1>Order History</h1> <div class="line"></div>
 
         <div th:if="${orders.empty}">
-            <p class="no-orders">У вас пока нет заказов.</p>
-        </div>
+            <p class="no-orders">You have no orders yet.</p> </div>
 
         <div th:unless="${orders.empty}">
             <div class="order" th:each="order : ${orders}">
-                <h3>Заказ №<span th:text="${order.id}">1</span></h3>
+                <h3>Order #<span th:text="${order.id}">1</span></h3> <p><strong>Placed on:</strong> <span th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+            </p>
 
-                <p><strong>Заказ сделан:</strong>
-                    <span th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+                <p><strong>Event Date:</strong> <span th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}"></span>
                 </p>
 
-                <p><strong>Дата мероприятия:</strong>
-                    <span th:text="${#temporals.format(order.eventDateTime, 'dd.MM.yyyy HH:mm')}"></span>
-                </p>
-
-                <p><strong>Гостей:</strong> <span th:text="${order.numberOfGuests}"></span></p>
-
-                <p><strong>Статус:</strong> <span th:text="${order.status}"></span></p>
-
-                <div th:if="${order.items != null and not #lists.isEmpty(order.items)}">
-                    <p><strong>Блюда:</strong></p>
-                    <ul>
-                        <li th:each="item : ${order.items}"
-                            th:text="${item.menuItem.name} + ' — ' + ${item.quantity} + ' шт.'"></li>
-                    </ul>
-                </div>
+                <p><strong>Guests:</strong> <span th:text="${order.numberOfGuests}"></span></p> <p><strong>Status:</strong> <span th:text="${order.status}"></span></p> <div th:if="${order.items != null and not #lists.isEmpty(order.items)}">
+                <p><strong>Dishes:</strong></p> <ul>
+                <li th:each="item : ${order.items}"
+                    th:text="${item.menuItem.name} + ' — ' + ${item.quantity} + ' pcs.'"></li> </ul>
+            </div>
 
                 <div th:if="${order.items == null or #lists.isEmpty(order.items)}">
-                    <p><em>Блюда не добавлены.</em></p>
-                </div>
+                    <p><em>No dishes added.</em></p> </div>
             </div>
         </div>
 
         <div class="btn-block">
-            <a href="/order" class="order-btn">Оформить заказ</a>
-        </div>
+            <a href="/order" class="order-btn">Place an Order</a> </div>
     </div>
 
 </div>

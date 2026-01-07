@@ -33,22 +33,28 @@ public class Invoice {
     public Invoice(Order order) {
         this.order = order;
         this.issuedAt = LocalDateTime.now();
-        this.totalAmount = calculateTotal(order);
         this.status = "DRAFT";
         this.invoiceNumber = generateInvoiceNumber();
+        recalculateTotal();
     }
 
-    private BigDecimal calculateTotal(Order order) {
-        return order.getItems().stream()
-                .map(item -> item.getMenuItem().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public void recalculateTotal() {
+        if (order != null && order.getItems() != null) {
+            BigDecimal total = order.getItems().stream()
+                    .map(item -> {
+                        BigDecimal price = item.getMenuItem() != null ? item.getMenuItem().getPrice() : BigDecimal.ZERO;
+                        return price.multiply(BigDecimal.valueOf(item.getQuantity()));
+                    })
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            this.totalAmount = total.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
     }
 
     private String generateInvoiceNumber() {
         return "INV-" + System.currentTimeMillis();
     }
 
-    // Getters and Setters
+    // Геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -16,35 +16,35 @@ public class OrderRequestDto {
     private Integer numberOfGuests;
 
     @NotBlank(message = "Адрес мероприятия обязателен")
-    private String eventAddress;
+    private String deliveryAddress;   // 🔥 изменено с eventAddress
 
-    private String notes;
+    private String comment;           // 🔥 изменено с notes
 
     private List<OrderItemDto> items = new ArrayList<>();
 
-    // Геттеры и сеттеры
+    // ===== Геттеры и сеттеры =====
     public LocalDateTime getEventDateTime() { return eventDateTime; }
     public void setEventDateTime(LocalDateTime eventDateTime) { this.eventDateTime = eventDateTime; }
 
     public Integer getNumberOfGuests() { return numberOfGuests; }
     public void setNumberOfGuests(Integer numberOfGuests) { this.numberOfGuests = numberOfGuests; }
 
-    public String getEventAddress() { return eventAddress; }
-    public void setEventAddress(String eventAddress) { this.eventAddress = eventAddress; }
+    public String getDeliveryAddress() { return deliveryAddress; }
+    public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
 
     public List<OrderItemDto> getItems() { return items; }
     public void setItems(List<OrderItemDto> items) { this.items = items; }
 
+    // ===== Вложенный класс для позиций заказа =====
     public static class OrderItemDto {
         private Long menuItemId;
         private String name;
         private BigDecimal price;
         private Integer quantity;
 
-        // Геттеры и сеттеры
         public Long getMenuItemId() { return menuItemId; }
         public void setMenuItemId(Long menuItemId) { this.menuItemId = menuItemId; }
 

@@ -1,6 +1,7 @@
 package com.example.Catering.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "menu_items")
@@ -12,7 +13,8 @@ public class MenuItem {
 
     private String name;
     private String description;
-    private java.math.BigDecimal price;
+
+    private BigDecimal price;
     private String category;
 
     // Геттеры и сеттеры
@@ -25,8 +27,8 @@ public class MenuItem {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public java.math.BigDecimal getPrice() { return price; }
-    public void setPrice(java.math.BigDecimal price) { this.price = price; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }

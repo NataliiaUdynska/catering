@@ -47,7 +47,17 @@ public class Order {
         PENDING, CONFIRMED, COMPLETED
     }
 
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
+
+
+    @Column(name = "comment")
+    private String comment; // например, "не добавлять соль", "сделать блюда острее" и т.д.
+
+
     // Геттеры и сеттеры
+    public String getDeliveryAddress() { return deliveryAddress; }
+    public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -68,4 +78,6 @@ public class Order {
 
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
 }

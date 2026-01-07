@@ -1,82 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
-<head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en"> <head>
     <meta charset="UTF-8">
-    <title>Корзина</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f8f8; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 15px rgba(0,0,0,0.08); }
-        h1 { text-align: center; color: #4b6149; margin-bottom: 25px; }
-        .empty-cart { text-align: center; color: #777; font-style: italic; margin: 30px 0; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f5f5f5; color: #555; }
-        .quantity-input { width: 70px; padding: 6px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
-        .btn { padding: 6px 12px; margin: 4px; text-decoration: none; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
-        .btn-delete { background: #d9534f; color: white; }
-        .total { text-align: right; font-size: 1.2em; font-weight: bold; margin: 20px 0; padding-top: 15px; border-top: 1px dashed #ddd; }
-        .actions { text-align: center; margin: 25px 0; }
-        .btn-clear { background: #d9534f; color: white; padding: 10px 20px; margin: 0 8px; }
-        .btn-checkout { background: #496d55; color: white; padding: 10px 20px; margin: 0 8px; }
-        .btn-continue { background: #6b8e77; color: white; padding: 10px 20px; margin: 0 8px; }
-    </style>
+    <title>Shopping Cart</title> <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f8f8f8; }
+    .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 15px rgba(0,0,0,0.08); }
+    h1 { text-align: center; color: #4b6149; margin-bottom: 25px; }
+    .empty-cart { text-align: center; color: #777; font-style: italic; margin: 30px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { padding: 14px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #f5f5f5; color: #555; }
+    .quantity-input { width: 70px; padding: 6px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
+    .btn { padding: 6px 12px; margin: 4px; text-decoration: none; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    .btn-delete { background: #d9534f; color: white; }
+    .total { text-align: right; font-size: 1.2em; font-weight: bold; margin: 20px 0; padding-top: 15px; border-top: 1px dashed #ddd; }
+    .actions { text-align: center; margin: 25px 0; }
+    .btn-clear { background: #d9534f; color: white; padding: 10px 20px; margin: 0 8px; }
+    .btn-checkout { background: #496d55; color: white; padding: 10px 20px; margin: 0 8px; }
+    .btn-continue { background: #6b8e77; color: white; padding: 10px 20px; margin: 0 8px; }
+</style>
 </head>
 <body>
 <div class="container">
-    <h1>Ваша корзина</h1>
-
-    <div th:if="${cart.empty}">
-        <p class="empty-cart">Корзина пуста.</p>
-        <div class="actions">
-            <a href="/menu" class="btn btn-continue">Выбрать блюда</a>
-        </div>
-    </div>
+    <h1>Your Shopping Cart</h1> <div th:if="${cart.empty}">
+    <p class="empty-cart">Your cart is empty.</p> <div class="actions">
+    <a href="/menu" class="btn btn-continue">Select Dishes</a> </div>
+</div>
 
     <div th:unless="${cart.empty}">
         <table>
             <thead>
             <tr>
-                <th>Блюдо</th>
-                <th>Цена</th>
-                <th>Количество</th>
-                <th>Итого</th>
-                <th>Действие</th>
-            </tr>
+                <th>Dish</th> <th>Price</th> <th>Quantity</th> <th>Total</th> <th>Action</th> </tr>
             </thead>
             <tbody>
             <tr th:each="item : ${cart}">
-                <td th:text="${item.name}">Название</td>
-                <td th:text="${#numbers.formatCurrency(item.price)}">Цена</td>
-                <td>
-                    <form th:action="@{/cart/update}" method="post" style="display:inline;">
-                        <input type="hidden" name="menuItemId" th:value="${item.menuItemId}" />
-                        <input type="number" name="quantity" th:value="${item.quantity}" min="1" class="quantity-input" />
-                        <button type="submit" style="display:none;"></button>
-                    </form>
-                </td>
-                <td th:text="${#numbers.formatCurrency(item.price * item.quantity)}">Итого</td>
-                <td>
-                    <form th:action="@{/cart/remove}" method="post" style="display:inline;">
-                        <input type="hidden" name="menuItemId" th:value="${item.menuItemId}" />
-                        <button type="submit" class="btn btn-delete">Удалить</button>
-                    </form>
-                </td>
+                <td th:text="${item.name}">Name</td> <td th:text="${#numbers.formatCurrency(item.price)}">Price</td> <td>
+                <form th:action="@{/cart/update}" method="post" style="display:inline;">
+                    <input type="hidden" name="menuItemId" th:value="${item.menuItemId}" />
+                    <input type="number" name="quantity" th:value="${item.quantity}" min="1" class="quantity-input" />
+                    <button type="submit" style="display:none;"></button>
+                </form>
+            </td>
+                <td th:text="${#numbers.formatCurrency(item.price * item.quantity)}">Total</td> <td>
+                <form th:action="@{/cart/remove}" method="post" style="display:inline;">
+                    <input type="hidden" name="menuItemId" th:value="${item.menuItemId}" />
+                    <button type="submit" class="btn btn-delete">Delete</button> </form>
+            </td>
             </tr>
             </tbody>
         </table>
 
         <div class="total">
-            Общая сумма:
-            <span th:text="${#numbers.formatCurrency(total)}">0 ₴</span>
+            Grand Total: <span th:text="${#numbers.formatCurrency(total)}">0 ₴</span>
         </div>
 
         <div class="actions">
-            <a href="/menu" class="btn btn-continue">Продолжить выбор</a>
-            <a href="/order" class="btn btn-checkout">Оформить заказ</a>
-        </div>
+            <a href="/menu" class="btn btn-continue">Continue Selection</a> <a href="/order" class="btn btn-checkout">Place Order</a> </div>
 
         <form th:action="@{/cart/clear}" method="post" style="text-align: center; margin-top: 20px;">
-            <button type="submit" class="btn btn-clear" onclick="return confirm('Очистить всю корзину?')">Очистить всё</button>
+            <button type="submit" class="btn btn-clear" onclick="return confirm('Clear the entire cart?')">Clear All</button>
         </form>
     </div>
 </div>

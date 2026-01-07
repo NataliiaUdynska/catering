@@ -1,66 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"> <head>
     <meta charset="UTF-8">
-    <title>Ошибка</title>
-    <style>
-        /* Сброс стилей */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    <title>Error</title> <style>
+    /* Style Reset */ /* Сброс стилей */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: #f2f2f2;
-        }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f2f2f2;
+    }
 
-        .error-container {
-            background: #fff;
-            padding: 40px 60px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-        }
+    .error-container {
+        background: #fff;
+        padding: 40px 60px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        text-align: center;
+        max-width: 400px;
+    }
 
-        h1 {
-            font-size: 36px;
-            color: #e74c3c;
-            margin-bottom: 20px;
-        }
+    h1 {
+        font-size: 36px;
+        color: #e74c3c;
+        margin-bottom: 20px;
+    }
 
-        p {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 30px;
-        }
+    p {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 30px;
+    }
 
-        a {
-            display: inline-block;
-            padding: 12px 25px;
-            background: #3498db;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background 0.3s ease;
-        }
+    a {
+        display: inline-block;
+        padding: 12px 25px;
+        background: #3498db;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+    }
 
-        a:hover {
-            background: #2980b9;
-        }
-    </style>
+    a:hover {
+        background: #2980b9;
+    }
+</style>
 </head>
 <body>
 <div class="error-container">
-    <h1>Произошла ошибка</h1>
-    <p th:text="${message}">Неизвестная ошибка.</p>
-    <a href="/">На главную</a>
-</div>
+    <h1>An error occurred</h1> <p th:text="${message}">Unknown error.</p> <a href="/">Back to home</a> </div>
 </body>
 </html>

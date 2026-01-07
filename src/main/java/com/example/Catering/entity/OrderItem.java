@@ -12,16 +12,17 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;
 
     @NotNull
     @Min(1)
+    @Column(nullable = false)
     private Integer quantity = 1;
 
     // Геттеры и сеттеры

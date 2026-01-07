@@ -4,6 +4,7 @@ import com.example.Catering.repository.MenuItemRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MenuController {
@@ -15,8 +16,20 @@ public class MenuController {
     }
 
     @GetMapping("/menu")
-    public String menu(Model model) {
-        model.addAttribute("menuItems", menuItemRepository.findAllByOrderByNameAsc());
+    public String menu(
+            @RequestParam(value = "category", required = false) String category,
+            Model model) {
+
+        // Проверяем, выбрана ли категория "все" или фильтр не задан
+        if (category == null || category.equalsIgnoreCase("all")) {
+            model.addAttribute("menuItems", menuItemRepository.findAllByOrderByNameAsc());
+            model.addAttribute("selectedCategory", "all");
+        } else {
+            // Ищем по точному (но нечувствительному к регистру) названию из БД
+            model.addAttribute("menuItems", menuItemRepository.findByCategoryIgnoreCaseOrderByNameAsc(category));
+            model.addAttribute("selectedCategory", category);
+        }
+
         return "menu";
     }
 }
