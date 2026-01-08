@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Our Menu</title>
     <style>
+        /* Ваши стили остаются без изменений */
         body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
         h1 { text-align: center; color: #4b6149; }
         .filter { text-align: center; margin-bottom: 20px; }
@@ -37,25 +38,25 @@
 
 <div class="filter">
     <a th:href="@{/menu(category='all')}"
-       th:classappend="${selectedCategory == 'all'} ? ' active'">All</a>
+       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'all')} ? ' active'">All</a>
 
     <a th:href="@{/menu(category='Salads')}"
-       th:classappend="${selectedCategory == 'Salads'} ? ' active'">Salads</a>
+       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Salads')} ? ' active'">Salads</a>
 
     <a th:href="@{/menu(category='Soups')}"
-       th:classappend="${selectedCategory == 'Soups'} ? ' active'">Soups</a>
+       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Soups')} ? ' active'">Soups</a>
 
     <a th:href="@{/menu(category='Main Courses')}"
-       th:classappend="${selectedCategory == 'Main Courses'} ? ' active'">Main</a>
+       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Main Courses')} ? ' active'">Main</a>
 
     <a th:href="@{/menu(category='Appetizers')}"
-       th:classappend="${selectedCategory == 'Appetizers'} ? ' active'">Snacks</a>
+       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Appetizers')} ? ' active'">Snacks</a>
 
     <a th:href="@{/menu(category='Drinks')}"
-       th:classappend="${selectedCategory == 'Drinks'} ? ' active'">Drinks</a>
+       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Drinks')} ? ' active'">Drinks</a>
 
     <a th:href="@{/menu(category='Desserts')}"
-       th:classappend="${selectedCategory == 'Desserts'} ? ' active'">Desserts</a>
+       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Desserts')} ? ' active'">Desserts</a>
 </div>
 
 <div class="cart-link-container">
@@ -72,10 +73,12 @@
     <div class="item" th:each="item : ${menuItems}">
         <div class="name" th:text="${item.name}">Item Name</div>
         <div class="description" th:text="${item.description}">Description</div>
-        <div class="price" th:text="|$${#numbers.formatDecimal(item.price, 1, 2)}|">€0.00</div>
+
+        <div class="price" th:text="${#numbers.formatDecimal(item.price, 1, 2) + ' €'}">0.00 €</div>
+
         <div class="category-label" th:text="${item.category}">Category</div>
 
-        <form th:action="@{/cart/add(redirect='/menu')}" method="post" class="cart-form">
+        <form th:action="@{/cart/add}" method="post" class="cart-form">
             <input type="hidden" name="menuItemId" th:value="${item.id}" />
             <input type="number" name="quantity" value="1" min="1" />
             <button type="submit">Add to Cart</button>

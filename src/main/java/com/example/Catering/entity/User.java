@@ -40,7 +40,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
-    // Конструктор по умолчанию (обязателен для JPA)
+    // Конструктор по умолчанию  для JPA
     public User() {}
 
     // Геттеры и сеттеры

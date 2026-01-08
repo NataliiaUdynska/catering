@@ -23,7 +23,7 @@ public class SecurityConfig {
                         // Настройка доступа к путям
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
-                                .requestMatchers("/h2-console/**").permitAll() // Только для разработки!
+                                .requestMatchers("/h2-console/**").permitAll() // Только для разработки
                                 .requestMatchers("/", "/menu", "/cart", "/login", "/register", "/about", "/contacts").permitAll()
                                 .requestMatchers("/order", "/profile/**").authenticated()
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN", "STAFF")
@@ -31,7 +31,7 @@ public class SecurityConfig {
                         )
                         .formLogin(form -> form
                                 .loginPage("/login")
-                                .defaultSuccessUrl("/profile", true) // ← ПЕРЕНАПРАВЛЕНИЕ В ПРОФИЛЬ ПОСЛЕ ВХОДА
+                                .defaultSuccessUrl("/profile", true) // Перенаправление в профиль после входа
                                 .failureUrl("/login?error=true")
                                 .permitAll()
                         )

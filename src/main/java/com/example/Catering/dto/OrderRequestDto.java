@@ -8,21 +8,20 @@ import java.util.List;
 
 public class OrderRequestDto {
 
-    @NotNull(message = "Укажите дату и время мероприятия")
+    @NotNull(message = "Please specify the event date and time")
     private LocalDateTime eventDateTime;
 
-    @Min(value = 1, message = "Количество гостей должно быть не менее 1")
-    @NotNull(message = "Укажите количество гостей")
+    @Min(value = 1, message = "The number of guests must be at least 1")
+    @NotNull(message = "Please specify the number of guests")
     private Integer numberOfGuests;
 
-    @NotBlank(message = "Адрес мероприятия обязателен")
+    @NotBlank(message = "Delivery address is required")
     private String deliveryAddress;
-
     private String comment;
 
     private List<OrderItemDto> items = new ArrayList<>();
 
-    // ===== Геттеры и сеттеры =====
+    // Геттеры и сеттеры
     public LocalDateTime getEventDateTime() { return eventDateTime; }
     public void setEventDateTime(LocalDateTime eventDateTime) { this.eventDateTime = eventDateTime; }
 
@@ -38,7 +37,7 @@ public class OrderRequestDto {
     public List<OrderItemDto> getItems() { return items; }
     public void setItems(List<OrderItemDto> items) { this.items = items; }
 
-    // ===== Вложенный класс для позиций заказа =====
+    // Вложенный класс для позиций заказа
     public static class OrderItemDto {
         private Long menuItemId;
         private String name;

@@ -19,7 +19,7 @@ public class UserService {
 
     public void registerClient(UserRegistrationDto dto) {
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new RuntimeException("Пользователь с таким email уже существует");
+            throw new RuntimeException("User with this email already exists");
         }
 
         User user = new User();

@@ -17,7 +17,7 @@ public class MenuController {
 
     @GetMapping("/menu")
     public String menu(
-            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "category", required = false, defaultValue = "all") String category,
             Model model) {
 
         // Проверяем, выбрана ли категория "все" или фильтр не задан

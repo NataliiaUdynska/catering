@@ -31,7 +31,7 @@ public class ProfileController {
 
         // Находим пользователя в БД
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Получаем заказы пользователя
         var orders = orderService.getOrdersByUser(user);

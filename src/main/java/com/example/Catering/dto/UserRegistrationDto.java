@@ -17,7 +17,7 @@ public class UserRegistrationDto {
     private String email;
 
     @NotBlank
-    @Size(min = 6, message = "Пароль должен быть не менее 6 символов")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
     // Геттеры и сеттеры

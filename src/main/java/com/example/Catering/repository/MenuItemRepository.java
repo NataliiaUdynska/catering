@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
+
     List<MenuItem> findAllByOrderByNameAsc();
 
     // Игнорируем регистр при сравнении строк из БД и параметров URL

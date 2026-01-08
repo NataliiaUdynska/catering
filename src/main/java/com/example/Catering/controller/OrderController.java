@@ -103,7 +103,7 @@ public class OrderController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("errorMessage", "Не удалось оформить заказ. Попробуйте позже.");
+            model.addAttribute("errorMessage", "Failed to place the order. Please try again later.");
             model.addAttribute("order", orderDto);
             return "order-form";
         }

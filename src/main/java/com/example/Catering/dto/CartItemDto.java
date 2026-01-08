@@ -6,6 +6,7 @@ public class CartItemDto {
     private double price;
     private int quantity = 1;
 
+    // Геттеры и сеттеры
     public Long getMenuItemId() { return menuItemId; }
     public void setMenuItemId(Long menuItemId) { this.menuItemId = menuItemId; }
 
