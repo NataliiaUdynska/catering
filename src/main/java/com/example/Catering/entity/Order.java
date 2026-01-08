@@ -52,7 +52,7 @@ public class Order {
 
 
     @Column(name = "comment")
-    private String comment; // например, "не добавлять соль", "сделать блюда острее" и т.д.
+    private String comment;
 
 
     // Геттеры и сеттеры

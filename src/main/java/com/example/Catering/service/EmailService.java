@@ -26,10 +26,9 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true); // true = вложения разрешены
 
             helper.setTo(invoice.getOrder().getUser().getEmail());
-            helper.setSubject("Ваш счёт-фактура #" + invoice.getInvoiceNumber());
-            helper.setText("Уважаемый(ая) " + invoice.getOrder().getUser().getFirstName() + ",\n\n" +
-                    "Благодарим вас за заказ! Ниже прилагается счёт-фактура.");
-
+            helper.setSubject("Your Invoice #" + invoice.getInvoiceNumber());
+            helper.setText("Dear " + invoice.getOrder().getUser().getFirstName() + ",\n\n" +
+                    "Thank you for your order! Please find your invoice attached below.");
             // Генерация PDF
             byte[] pdfBytes = pdfInvoiceService.generateInvoicePdf(invoice);
 

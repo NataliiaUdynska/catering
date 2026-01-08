@@ -2,167 +2,232 @@ package com.example.Catering.service;
 
 import com.example.Catering.entity.Invoice;
 import com.example.Catering.entity.Order;
-import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.*;
-import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 
 @Service
 public class PdfInvoiceService {
 
-    private static final DeviceRgb HEADER_COLOR = new DeviceRgb(46, 125, 50);       // темно-зеленый
-    private static final DeviceRgb COMMENT_BG = new DeviceRgb(240, 248, 245);       // светлый зеленый
-    private static final DeviceRgb ROW_BG = new DeviceRgb(245, 245, 245);           // светло-серый для чередования
-    private static final Color TOTAL_BG = new DeviceRgb(200, 230, 201);             // светло-зеленый для итогов
+    // Данные компании
+    private static final String COMPANY_NAME = "Catering GmbH";
+    private static final String COMPANY_ADDRESS =
+            "Neuhauser Str. 25\n" +
+                    "80331 München\n" +
+                    "Germany";
 
+    private static final String BANK_DETAILS =
+            "Bank: Commerzbank München\n" +
+                    "IBAN: DE44 7006 0035 0506 0287 01\n" +
+                    "BIC: COOAAAFFXXX\n" +
+                    "Account holder: Catering GmbH";
+
+    // Генерация инвойса
     public byte[] generateInvoicePdf(Invoice invoice) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        try (PdfWriter writer = new PdfWriter(outputStream);
-             PdfDocument pdfDoc = new PdfDocument(writer);
-             Document document = new Document(pdfDoc)) {
+        try (PdfWriter writer = new PdfWriter(out);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document doc = new Document(pdf)) {
 
             Order order = invoice.getOrder();
 
-            // Заголовок
-            Paragraph title = new Paragraph("INVOICE")
-                    .setFontSize(26)
+            // Инфо компании
+            Paragraph header = new Paragraph(COMPANY_NAME)
                     .setBold()
-                    .setFontColor(ColorConstants.WHITE)
-                    .setBackgroundColor(HEADER_COLOR)
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setPadding(15);
-            document.add(title);
-            document.add(new Paragraph("\n"));
+                    .setFontSize(20);
+            doc.add(header);
+            doc.add(new Paragraph(COMPANY_ADDRESS).setFontSize(10));
+            doc.add(new Paragraph("\n"));
 
-            // Информация заказа
-            Table infoTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
-            infoTable.setWidth(UnitValue.createPercentValue(100));
+            // Инфо о клиенте
+            Table topTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}))
+                    .setWidth(UnitValue.createPercentValue(100));
 
-            infoTable.addCell(noBorderCell("INVOICE TO:\n" + order.getUser().getFirstName() + " " + order.getUser().getLastName()));
-            infoTable.addCell(noBorderCell("INVOICE #:\n" + invoice.getInvoiceNumber()));
+            String fullName =
+                    (order.getUser().getFirstName() != null ? order.getUser().getFirstName() : "") + " " +
+                            (order.getUser().getLastName() != null ? order.getUser().getLastName() : "");
 
-            infoTable.addCell(noBorderCell("ADDRESS:\n" + (order.getDeliveryAddress() != null ? order.getDeliveryAddress() : "—")));
-            infoTable.addCell(noBorderCell("ORDER DATE:\n" + invoice.getIssuedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+            String address = order.getDeliveryAddress() != null
+                    ? order.getDeliveryAddress()
+                    : "—";
 
-            infoTable.addCell(noBorderCell("EVENT DATE:\n" + order.getEventDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-            infoTable.addCell(noBorderCell("NUMBER OF GUESTS:\n" + order.getNumberOfGuests()));
+            // Левая колонка данные клиента
+            topTable.addCell(noBorder(
+                    fullName + "\n" +
+                            address + "\n" +
+                            "Germany"
+            ));
 
-            // Комент
-            Cell commentCell = new Cell(1, 2)
-                    .add(new Paragraph("COMMENT:\n" + (order.getComment() != null && !order.getComment().isBlank() ? order.getComment() : "—")))
-                    .setBackgroundColor(COMMENT_BG)
-                    .setPadding(8)
-                    .setBorder(Border.NO_BORDER);
-            infoTable.addCell(commentCell);
+            // Правая колонка инвойса
+            topTable.addCell(noBorder(
+                    "Invoice date: " +
+                            invoice.getIssuedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "\n" +
+                            "Invoice no.: " + invoice.getInvoiceNumber() + "\n" +
+                            "Order ID: " + order.getId()
+            ).setTextAlignment(TextAlignment.RIGHT));
 
-            document.add(infoTable);
-            document.add(new Paragraph("\n"));
+            doc.add(topTable);
 
-            // Таблица
-            Table itemsTable = new Table(UnitValue.createPercentArray(new float[]{1, 5, 2, 2, 2}));
-            itemsTable.setWidth(UnitValue.createPercentValue(100));
+            // Инфо о мероприятии
+            String eventDateTime = order.getEventDateTime() != null
+                    ? order.getEventDateTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+                    : "—";
 
-            itemsTable.addHeaderCell(headerCell("№"));
-            itemsTable.addHeaderCell(headerCell("ITEM DESCRIPTION"));
-            itemsTable.addHeaderCell(headerCell("PRICE"));
-            itemsTable.addHeaderCell(headerCell("QTY"));
-            itemsTable.addHeaderCell(headerCell("TOTAL"));
+            String guests = order.getNumberOfGuests() != null
+                    ? String.valueOf(order.getNumberOfGuests())
+                    : "—";
 
-            int index = 1;
-            BigDecimal subTotal = BigDecimal.ZERO;
-            boolean alternate = false;
+            String comment = (order.getComment() != null && !order.getComment().isBlank())
+                    ? order.getComment()
+                    : "—";
+
+            // Заголовки жирные, а данные обычные
+            Paragraph eventInfo = new Paragraph()
+                    .add(new Text("Event Date & Time: ").setBold())
+                    .add(new Text(eventDateTime + "\n"))
+                    .add(new Text("Number of Guests: ").setBold())
+                    .add(new Text(guests + "\n"))
+                    .add(new Text("Comments: ").setBold())
+                    .add(new Text(comment))
+                    .setFontSize(11)
+                    .setMarginTop(10)
+                    .setMarginBottom(10);
+
+            doc.add(eventInfo);
+
+            //Invoice
+            doc.add(new Paragraph("Invoice").setBold().setFontSize(14));
+            doc.add(new Paragraph("\n"));
+
+            // Таблица заказа
+            Table items = new Table(UnitValue.createPercentArray(new float[]{1, 5, 2, 2.5f}))
+                    .setWidth(UnitValue.createPercentValue(100));
+
+            items.addHeaderCell(th("No."));
+            items.addHeaderCell(th("Item"));
+            items.addHeaderCell(th("Price"));
+            items.addHeaderCell(th("Total"));
+
+            int pos = 1;
+            BigDecimal netTotal = BigDecimal.ZERO;
 
             for (var item : order.getItems()) {
-                BigDecimal lineTotal = item.getMenuItem().getPrice()
-                        .multiply(BigDecimal.valueOf(item.getQuantity()));
-                subTotal = subTotal.add(lineTotal);
+                BigDecimal price = item.getMenuItem().getPrice();
+                BigDecimal lineTotal =
+                        price.multiply(BigDecimal.valueOf(item.getQuantity()));
 
-                Color bgColor = alternate ? ROW_BG : ColorConstants.WHITE;
+                netTotal = netTotal.add(lineTotal);
 
-                itemsTable.addCell(dataCell(String.valueOf(index++), bgColor));
-                itemsTable.addCell(dataCell(item.getMenuItem().getName(), bgColor));
-                itemsTable.addCell(dataCell(item.getMenuItem().getPrice() + " €", bgColor));
-                itemsTable.addCell(dataCell(String.valueOf(item.getQuantity()), bgColor));
-                itemsTable.addCell(dataCell(lineTotal + " €", bgColor));
-
-                alternate = !alternate;
+                items.addCell(td(String.valueOf(pos++)));
+                items.addCell(td(
+                        item.getMenuItem().getName() +
+                                " — " + item.getQuantity() + " pcs."
+                ));
+                items.addCell(td(price.setScale(2, RoundingMode.HALF_UP) + " €"));
+                items.addCell(td(lineTotal.setScale(2, RoundingMode.HALF_UP) + " €"));
             }
 
-            document.add(itemsTable);
-            document.add(new Paragraph("\n"));
+            doc.add(items);
+            doc.add(new Paragraph("\n"));
 
-            // Итог
-            Table totalsTable = new Table(UnitValue.createPercentArray(new float[]{6, 2}))
-                    .setWidth(UnitValue.createPercentValue(50))
-                    .setHorizontalAlignment(HorizontalAlignment.RIGHT);
+            // Итоги блок
+            BigDecimal vat = netTotal.multiply(BigDecimal.valueOf(0.07)); // 7% VAT
+            BigDecimal gross = netTotal.add(vat);
 
-            totalsTable.addCell(totalLabelCell("SUBTOTAL", TOTAL_BG));
-            totalsTable.addCell(totalValueCell(subTotal + " €", TOTAL_BG));
+            Table totals = new Table(UnitValue.createPercentArray(new float[]{3, 2}))
+                    .setWidth(UnitValue.createPercentValue(60))
+                    .setMarginLeft(200);
 
-            BigDecimal tax = BigDecimal.ZERO;
-            totalsTable.addCell(totalLabelCell("TAX (0%)", TOTAL_BG));
-            totalsTable.addCell(totalValueCell(tax + " €", TOTAL_BG));
+            totals.addCell(totalLabel("Subtotal"));
+            totals.addCell(totalValue(netTotal.setScale(2, RoundingMode.HALF_UP) + " €"));
 
-            BigDecimal total = subTotal.add(tax);
-            totalsTable.addCell(totalLabelCell("TOTAL", TOTAL_BG));
-            totalsTable.addCell(totalValueCell(total + " €", TOTAL_BG));
+            totals.addCell(totalLabel("VAT 7%"));
+            totals.addCell(totalValue(vat.setScale(2, RoundingMode.HALF_UP) + " €"));
 
-            document.add(totalsTable);
-            document.add(new Paragraph("\nThank you for your business!").setBold().setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("Authorized Signature").setTextAlignment(TextAlignment.RIGHT));
+            totals.addCell(totalLabelBold("Total Amount Due"));
+            totals.addCell(totalValueBold(gross.setScale(2, RoundingMode.HALF_UP) + " €"));
+
+            doc.add(totals);
+            doc.add(new Paragraph("\n"));
+
+            // Нижняя часть страницы
+            doc.add(new Paragraph(
+                    "Thank you for your order.\n" +
+                            "Please transfer the total amount within 7 days."
+            ).setFontSize(10));
+
+            doc.add(new Paragraph("\nBank details:")
+                    .setBold()
+                    .setFontSize(10));
+            doc.add(new Paragraph(BANK_DETAILS).setFontSize(10));
+
+            doc.add(new Paragraph("\n" + COMPANY_NAME)
+                    .setFontSize(9)
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setMarginTop(30));
 
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка при генерации PDF", e);
+            throw new RuntimeException("Error during PDF generation", e);
         }
 
-        return outputStream.toByteArray();
+        return out.toByteArray();
     }
 
-    // Помощники
-    private Cell headerCell(String text) {
+
+    // Заголовок таблицы
+    private Cell th(String text) {
         return new Cell()
                 .add(new Paragraph(text).setBold())
-                .setBackgroundColor(ColorConstants.LIGHT_GRAY)
-                .setTextAlignment(TextAlignment.CENTER);
+                .setBackgroundColor(ColorConstants.LIGHT_GRAY);
     }
 
-    private Cell dataCell(String text, Color bgColor) {
+    // Обычная ячейка таблицы
+    private Cell td(String text) {
         return new Cell()
                 .add(new Paragraph(text))
-                .setBackgroundColor(bgColor)
-                .setTextAlignment(TextAlignment.CENTER);
+                .setKeepTogether(true);
     }
 
-    private Cell totalLabelCell(String text, Color bgColor) {
-        return new Cell()
-                .add(new Paragraph(text).setBold())
-                .setBackgroundColor(bgColor)
-                .setTextAlignment(TextAlignment.RIGHT)
-                .setBorder(Border.NO_BORDER);
-    }
-
-    private Cell totalValueCell(String text, Color bgColor) {
+    // Название строки итога
+    private Cell totalLabel(String text) {
         return new Cell()
                 .add(new Paragraph(text))
-                .setBackgroundColor(bgColor)
-                .setTextAlignment(TextAlignment.CENTER)
-                .setBorder(Border.NO_BORDER);
+                .setBorder(Border.NO_BORDER)
+                .setTextAlignment(TextAlignment.RIGHT);
     }
 
-    private Cell noBorderCell(String text) {
+    // Значение итога
+    private Cell totalValue(String text) {
+        return new Cell()
+                .add(new Paragraph(text).setKeepTogether(true))
+                .setBorder(Border.NO_BORDER)
+                .setTextAlignment(TextAlignment.RIGHT);
+    }
+
+    // Жирный заголовок итога
+    private Cell totalLabelBold(String text) {
+        return totalLabel(text).setBold();
+    }
+
+    // Жирное значение итога
+    private Cell totalValueBold(String text) {
+        return totalValue(text).setBold();
+    }
+
+    // Ячейка без рамок
+    private Cell noBorder(String text) {
         return new Cell()
                 .add(new Paragraph(text))
                 .setBorder(Border.NO_BORDER);
