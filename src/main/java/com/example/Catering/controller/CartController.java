@@ -4,14 +4,12 @@ import com.example.Catering.dto.CartItemDto;
 import com.example.Catering.entity.MenuItem;
 import com.example.Catering.repository.MenuItemRepository;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -25,14 +23,7 @@ public class CartController {
 
     @GetMapping("/cart")
     public String viewCart(HttpSession session, Model model) {
-        @SuppressWarnings("unchecked")
-        List<CartItemDto> cart = (List<CartItemDto>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
-        } else {
-            cart.removeIf(Objects::isNull);
-        }
-        session.setAttribute("cart", cart);
+        List<CartItemDto> cart = getCartFromSession(session);
 
         double total = cart.stream()
                 .mapToDouble(item -> item.getPrice() * item.getQuantity())
@@ -43,20 +34,38 @@ public class CartController {
         return "cart";
     }
 
+    // Обработка автоматического обновления количества
+    @PostMapping("/cart/update")
+    public String updateQuantity(@RequestParam Long menuItemId,
+                                 @RequestParam int quantity,
+                                 HttpSession session) {
+        List<CartItemDto> cart = getCartFromSession(session);
+
+        for (CartItemDto item : cart) {
+            if (item.getMenuItemId().equals(menuItemId)) {
+                if (quantity > 0) {
+                    item.setQuantity(quantity);
+                } else {
+                    cart.remove(item);
+                }
+                break;
+            }
+        }
+
+        if (cart.isEmpty()) {
+            session.removeAttribute("cart");
+        }
+        return "redirect:/cart";
+    }
+
     @PostMapping("/cart/add")
     public String addToCart(@RequestParam Long menuItemId,
                             @RequestParam(defaultValue = "1") int quantity,
                             HttpSession session) {
         MenuItem item = menuItemRepository.findById(menuItemId)
-                .orElseThrow(() -> new RuntimeException("Блюдо не найдено"));
+                .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        @SuppressWarnings("unchecked")
-        List<CartItemDto> cart = (List<CartItemDto>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
-            session.setAttribute("cart", cart);
-        }
-        cart.removeIf(Objects::isNull);
+        List<CartItemDto> cart = getCartFromSession(session);
 
         boolean exists = false;
         for (CartItemDto dto : cart) {
@@ -81,16 +90,10 @@ public class CartController {
 
     @PostMapping("/cart/remove")
     public String removeFromCart(@RequestParam Long menuItemId, HttpSession session) {
-        @SuppressWarnings("unchecked")
-        List<CartItemDto> cart = (List<CartItemDto>) session.getAttribute("cart");
-        if (cart != null) {
-            cart.removeIf(item -> item != null && item.getMenuItemId().equals(menuItemId));
-            if (cart.isEmpty()) {
-                session.removeAttribute("cart");
-            } else {
-                session.setAttribute("cart", cart);
-            }
-        }
+        List<CartItemDto> cart = getCartFromSession(session);
+        cart.removeIf(item -> item.getMenuItemId().equals(menuItemId));
+
+        if (cart.isEmpty()) session.removeAttribute("cart");
         return "redirect:/cart";
     }
 
@@ -100,44 +103,15 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    // AJAX-метод для обновления количества
-    @PostMapping("/cart/update-ajax")
-    @ResponseBody
-    public ResponseEntity<String> updateQuantityAjax(@RequestBody Map<String, Object> payload, HttpSession session) {
-        Long menuItemId = ((Number) payload.get("menuItemId")).longValue();
-        int quantity = ((Number) payload.get("quantity")).intValue();
-
+    // Хелпер для получения корзины
+    private List<CartItemDto> getCartFromSession(HttpSession session) {
         @SuppressWarnings("unchecked")
         List<CartItemDto> cart = (List<CartItemDto>) session.getAttribute("cart");
         if (cart == null) {
-            return ResponseEntity.badRequest().body("Корзина пуста");
+            cart = new ArrayList<>();
+            session.setAttribute("cart", cart);
         }
-
-        List<CartItemDto> updated = new ArrayList<>();
-        boolean found = false;
-        for (CartItemDto item : cart) {
-            if (item == null) continue;
-            if (item.getMenuItemId().equals(menuItemId)) {
-                if (quantity > 0) {
-                    item.setQuantity(quantity);
-                    updated.add(item);
-                }
-                found = true;
-            } else {
-                updated.add(item);
-            }
-        }
-
-        if (!found) {
-            return ResponseEntity.badRequest().body("Блюдо не найдено");
-        }
-
-        if (updated.isEmpty()) {
-            session.removeAttribute("cart");
-        } else {
-            session.setAttribute("cart", updated);
-        }
-
-        return ResponseEntity.ok("OK");
+        cart.removeIf(Objects::isNull);
+        return cart;
     }
 }
