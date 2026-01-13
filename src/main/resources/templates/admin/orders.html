@@ -206,9 +206,18 @@
             <td th:text="${order.user.email}">user@example.com</td>
             <td>
                 <div style="font-weight: 600; color: #2d3748;"
-                     th:text="${#temporals.format(order.eventDateTime, 'MMM dd, yyyy', 'en')}">Jan 01, 2026</div>
+                     th:text="${#temporals.format(
+             order.eventDateTime,
+             'MMM dd, yyyy',
+             T(java.util.Locale).ENGLISH
+         )}">
+                    Jan 01, 2026
+                </div>
+
                 <div style="font-size: 0.85em; color: #718096; margin-top: 2px;"
-                     th:text="${#temporals.format(order.eventDateTime, 'HH:mm')}">20:30</div>
+                     th:text="${#temporals.format(order.eventDateTime, 'HH:mm')}">
+                    20:30
+                </div>
             </td>
             <td th:text="${order.numberOfGuests}" style="font-weight: 500;">5</td>
             <td>

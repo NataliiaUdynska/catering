@@ -35,7 +35,7 @@ public class AuthController {
             userService.registerClient(userDto);
             model.addAttribute("success", true);
             model.addAttribute("user", new UserRegistrationDto());
-            return "register";
+            return "profile";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("user", userDto);

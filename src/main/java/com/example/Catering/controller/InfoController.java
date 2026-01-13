@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -14,7 +15,6 @@ public class InfoController {
 
     private final ContactService contactService;
 
-    // Конструктор для зависимости
     public InfoController(ContactService contactService) {
         this.contactService = contactService;
     }
@@ -32,17 +32,20 @@ public class InfoController {
 
     @PostMapping("/contacts")
     public String submitContact(
-            @Valid ContactRequestDto contactRequest,
+            @Valid @ModelAttribute("contactRequest") ContactRequestDto contactRequest,
             BindingResult bindingResult,
-            Model model) {
+            Model model
+    ) {
 
         if (bindingResult.hasErrors()) {
             return "contacts";
         }
 
-        contactService.saveContactRequest(contactRequest); // вызов метода
+        contactService.saveContactRequest(contactRequest);
+
         model.addAttribute("success", true);
-        model.addAttribute("contactRequest", new ContactRequestDto());
+        model.addAttribute("contactRequest", new ContactRequestDto()); // очистка формы
+
         return "contacts";
     }
 }

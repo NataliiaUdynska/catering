@@ -46,7 +46,7 @@
             <tbody>
             <tr th:each="item : ${cart}">
                 <td th:text="${item.name}">Name</td>
-                <td th:text="${#numbers.formatCurrency(item.price)}">Price</td>
+                <td th:text="${#numbers.formatDecimal(item.price, 1, 2, 'COMMA')} + ' €'">3,50 €</td>
                 <td>
                     <form th:action="@{/cart/update}" method="post">
                         <input type="hidden" name="menuItemId" th:value="${item.menuItemId}" />
@@ -59,7 +59,7 @@
                                oninput="debounceSubmit(this.form)" />
                     </form>
                 </td>
-                <td th:text="${#numbers.formatCurrency(item.price * item.quantity)}">Total</td>
+                <td th:text="${#numbers.formatDecimal(item.price * item.quantity, 1, 2, 'COMMA')} + ' €'">17,50 €</td>
                 <td>
                     <form th:action="@{/cart/remove}" method="post" style="display:inline;">
                         <input type="hidden" name="menuItemId" th:value="${item.menuItemId}" />
@@ -71,7 +71,7 @@
         </table>
 
         <div class="total">
-            Grand Total: <span th:text="${#numbers.formatCurrency(total)}">0 €</span>
+            Grand Total: <span th:text="${#numbers.formatDecimal(total, 1, 2, 'COMMA')} + ' €'">0,00 €</span>
         </div>
 
         <div class="actions">
@@ -89,7 +89,7 @@
     let timeout = null;
     function debounceSubmit(form) {
         clearTimeout(timeout);
-        // Страница обновится через 800мс после последнего нажатия клавиши
+        // Страница обновится через 800мс после последнего ввода, чтобы не спамить сервер
         timeout = setTimeout(() => {
             form.submit();
         }, 800);

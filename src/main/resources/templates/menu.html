@@ -2,123 +2,220 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Our Menu</title>
+    <title>Our Menu | Catering</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
-                        url('https://images.unsplash.com/photo-1495195129352-aeb325a55b65?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f7f7f5;
+            color: #333;
         }
 
+        /* Навигация — Полная копия стиля Home */
         nav {
-            display: flex;
-            justify-content: center;
-            padding: 25px 0;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background-color: #ffffff;
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         nav a {
             color: #444;
             text-decoration: none;
-            margin: 0 20px;
-            font-size: 1.1em;
-            transition: 0.3s;
+            margin: 0 18px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s, border-bottom 0.3s;
+            padding-bottom: 5px;
         }
-        nav a:hover { color: #6b8e77; }
+        nav a:hover {
+            color: #6b8e77;
+            border-bottom: 2px solid #6b8e77;
+        }
+
+        /* Шапка в стиле Home (эффект стекла) */
+        header {
+            position: relative;
+            background-image: url('https://ekb.caterme.ru/sites/default/files/landing_photo/Starfood_6.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 45vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+           .header-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 1;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 10px 60px;
+        border-radius: 16px;
+        max-width: 650px;
+    }
+        .header-content h1 {
+            font-size: 2.5rem;
+            color: #2d2d2d;
+            padding:inherit;
+        }
+
+          .header-content p {
+        font-size: 1.2rem;
+        color: #3f3f3f;
+    }
 
         .container {
-            max-width: 1200px;
-            margin: 40px auto;
+            max-width: 1100px;
+            margin: 50px auto;
             padding: 0 20px;
         }
 
-        .header-section {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 60px 40px;
+
+
+        /* Фильтры */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            gap: 10px;
+        }
+        .filter-section a {
+            padding: 8px 20px;
             border-radius: 20px;
+            text-decoration: none;
+            background: #fff;
+            color: #6b8e77;
+            border: 1px solid #6b8e77;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .filter-section a.active, .filter-section a:hover {
+            background: #6b8e77;
+            color: #fff;
+        }
+
+        /* Кнопка корзины */
+        .cart-wrapper {
             text-align: center;
             margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-        .header-section h1 {
-            font-size: 3em;
-            color: #333;
-            margin: 0 0 20px 0;
-        }
-
-        .filter { margin-bottom: 30px; display: flex; justify-content: center; flex-wrap: wrap; }
-        .filter a {
-            padding: 10px 20px; margin: 5px; border-radius: 30px; text-decoration: none;
-            background: white; color: #6b8e77; border: 2px solid #6b8e77;
-            transition: 0.3s; font-weight: 600;
-        }
-        .filter a.active, .filter a:hover { background: #6b8e77; color: white; }
-
-        .menu-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        .item {
-            background: white;
-            padding: 0;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        .cart-link {
+            display: inline-block;
+            background: #6b8e77;
+            color: white;
+            padding: 12px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
             transition: 0.3s;
+        }
+        .cart-link:hover {
+            background: #555;
+            transform: scale(1.05);
+        }
+
+        /* Сетка меню в стиле Feature Cards */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .menu-item {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Чтобы картинка не вылезала за углы */
         }
-        .item:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .menu-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
 
-        /* Стили для контейнера картинки */
         .item-image {
             width: 100%;
             height: 200px;
-            overflow: hidden;
-        }
-        .item-image img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
-            transition: 0.5s;
         }
-        .item:hover .item-image img { transform: scale(1.1); }
 
-        /* Контент внутри карточки */
-        .item-content {
-            padding: 20px 25px 25px 25px;
-            display: flex;
-            flex-direction: column;
+        .item-info {
+            padding: 20px;
+            text-align: center;
             flex-grow: 1;
         }
-
-        .name { font-size: 1.4em; font-weight: bold; color: #333; margin-bottom: 10px; }
-        .description { color: #666; font-size: 0.95em; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
-        .price { font-size: 1.3em; color: #4b6149; font-weight: bold; margin-bottom: 15px; }
-        .category-label {
-            font-size: 0.75em; color: #aaa; text-transform: uppercase;
-            letter-spacing: 2px; margin-bottom: 10px;
+        .item-category {
+            font-size: 0.75rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .item-info h3 {
+            color: #444;
+            margin: 5px 0 10px;
+            font-size: 1.3rem;
+        }
+        .item-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .item-price {
+            font-weight: bold;
+            color: #6b8e77;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
         }
 
-        .cart-form { display: flex; gap: 10px; }
-        .cart-form input { width: 60px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
-        .cart-form button {
-            flex-grow: 1; padding: 10px; background: #6b8e77; color: white;
-            border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        /* Форма добавления */
+        .add-to-cart-form {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: auto;
         }
-        .cart-form button:hover { background: #4b6149; }
+        .add-to-cart-form input {
+            width: 50px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .add-to-cart-form button {
+            background: #6b8e77;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .add-to-cart-form button:hover {
+            background: #4b6149;
+        }
 
-        .cart-btn-fixed { text-align: center; margin-bottom: 30px; }
-        .cart-link {
-            background: #333; color: white; padding: 15px 40px;
-            border-radius: 50px; text-decoration: none; font-weight: bold;
+        footer {
+            background-color: #e9e9e7;
+            color: #555;
+            text-align: center;
+            padding: 25px 0;
+            font-size: 0.95rem;
+            border-top: 1px solid #dcdcdc;
+            margin-top: 60px;
         }
     </style>
 </head>
@@ -131,41 +228,42 @@
     <a href="/menu">Menu</a>
     <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Profile</a>
     <a th:unless="${#authentication?.authenticated}" href="/login">Login</a>
+    <a th:unless="${#authentication?.authenticated}" href="/register">Registration</a>
 </nav>
 
-<div class="container">
-    <div class="header-section">
+<header>
+    <div class="header-overlay"></div>
+    <div class="header-content">
         <h1>Our Menu</h1>
-        <p>Discover our carefully crafted dishes for your perfect event</p>
+        <p>A wide variety of dishes to suit every palate</p>
+    </div>
+</header>
 
-        <div class="filter">
-            <a th:href="@{/menu(category='all')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'all')} ? ' active'">All</a>
-            <a th:href="@{/menu(category='Salads')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Salads')} ? ' active'">Salads</a>
-            <a th:href="@{/menu(category='Soups')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Soups')} ? ' active'">Soups</a>
-            <a th:href="@{/menu(category='Main Courses')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Main Courses')} ? ' active'">Main</a>
-            <a th:href="@{/menu(category='Drinks')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Drinks')} ? ' active'">Drinks</a>
-            <a th:href="@{/menu(category='Desserts')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Desserts')} ? ' active'">Desserts</a>
-        </div>
+<div class="container">
+    <div class="filter-section">
+        <a th:href="@{/menu(category='all')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'all')} ? ' active'">All</a>
+        <a th:href="@{/menu(category='Salads')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Salads')} ? ' active'">Salads</a>
+        <a th:href="@{/menu(category='Soups')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Soups')} ? ' active'">Soups</a>
+        <a th:href="@{/menu(category='Main Courses')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Main Courses')} ? ' active'">Main</a>
+        <a th:href="@{/menu(category='Drinks')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Drinks')} ? ' active'">Drinks</a>
+        <a th:href="@{/menu(category='Desserts')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Desserts')} ? ' active'">Desserts</a>
     </div>
 
-    <div class="cart-btn-fixed">
+    <div class="cart-wrapper">
         <a href="/cart" class="cart-link">🛒 View Cart</a>
     </div>
 
-    <div class="menu-container">
-        <div class="item" th:each="item : ${menuItems}">
-            <div class="item-image">
-                <img th:src="${item.imageUrl != null && !item.imageUrl.isEmpty()} ? ${item.imageUrl} : 'https://via.placeholder.com/400x300?text=Delicious+Food'"
-                     alt="Dish Image">
-            </div>
+    <div class="menu-grid">
+        <div class="menu-item" th:each="item : ${menuItems}">
+            <img class="item-image" th:src="${item.imageUrl != null && !item.imageUrl.isEmpty()} ? ${item.imageUrl} : 'https://via.placeholder.com/400x300?text=Delicious+Food'" alt="Dish Image">
 
-            <div class="item-content">
-                <div class="category-label" th:text="${item.category}">Category</div>
-                <div class="name" th:text="${item.name}">Item Name</div>
-                <div class="description" th:text="${item.description}">Description</div>
-                <div class="price" th:text="${#numbers.formatDecimal(item.price, 1, 2) + ' €'}">0.00 €</div>
+            <div class="item-info">
+                <div class="item-category" th:text="${item.category}">Category</div>
+                <h3 th:text="${item.name}">Dish Name</h3>
+                <p class="item-description" th:text="${item.description}">Description</p>
+                <div class="item-price" th:text="${#numbers.formatDecimal(item.price, 1, 2) + ' €'}">0.00 €</div>
 
-                <form th:action="@{/cart/add}" method="post" class="cart-form">
+                <form th:action="@{/cart/add}" method="post" class="add-to-cart-form">
                     <input type="hidden" name="menuItemId" th:value="${item.id}" />
                     <input type="number" name="quantity" value="1" min="1" />
                     <button type="submit">Add to Cart</button>
@@ -174,6 +272,10 @@
         </div>
     </div>
 </div>
+
+<footer>
+    <p>&copy; 2026 Catering. All rights reserved.</p>
+</footer>
 
 </body>
 </html>

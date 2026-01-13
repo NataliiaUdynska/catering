@@ -132,7 +132,7 @@ public class AdminController {
         order.setStatus(status);
         orderRepository.save(order);
 
-        // Генерация и отправка счёта при сCONFIRMED
+        // Генерация и отправка счёта при CONFIRMED
         if (oldStatus != Order.OrderStatus.CONFIRMED && status == Order.OrderStatus.CONFIRMED) {
             if (invoiceRepository.findByOrderId(id) != null) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Счёт уже сгенерирован");

@@ -263,11 +263,12 @@
                 <h3>Order #<span th:text="${order.id}">1</span></h3>
 
                 <p><strong>Placed on:</strong>
-                    <span th:text="${#temporals.format(order.createdAt, 'MMM dd, yyyy HH:mm', 'en')}"></span>
-                </p>
+                    <span th:text="${#temporals.format(order.createdAt,
+        'MMM dd, yyyy HH:mm', T(java.util.Locale).ENGLISH)}"></span>
 
                 <p><strong>Event Date:</strong>
-                    <span th:text="${#temporals.format(order.eventDateTime, 'MMM dd, yyyy HH:mm', 'en')}"></span>
+                <span th:text="${#temporals.format(order.createdAt,
+        'MMM dd, yyyy HH:mm', T(java.util.Locale).ENGLISH)}"></span>
                 </p>
 
                 <p><strong>Guests:</strong> <span th:text="${order.numberOfGuests}"></span></p>

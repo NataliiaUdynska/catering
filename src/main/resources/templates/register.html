@@ -12,18 +12,23 @@
         min-height: 100vh;
     }
 
+    /* Navigation */ /* Навигация */
     nav {
         background-color: #ffffff;
         padding: 15px 0;
         text-align: center;
         border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
 
     nav a {
         color: #444;
         text-decoration: none;
-        margin: 0 20px;
+        margin: 0 18px;
         font-weight: 500;
+        font-size: 1rem;
         transition: color 0.3s, border-bottom 0.3s;
         padding-bottom: 5px;
     }
@@ -143,9 +148,14 @@
 <body>
 
 <nav>
-    <a href="/">Home</a> |
-    <a href="/about">About Us</a> |
-    <a href="/contacts">Contacts</a> </nav>
+    <a href="/">Home</a>
+    <a href="/about">About Us</a>
+    <a href="/contacts">Contacts</a>
+    <a href="/menu">Menu</a>
+    <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Profile</a>
+    <a th:unless="${#authentication?.authenticated}" href="/login">Login</a>
+    <a th:unless="${#authentication?.authenticated}" href="/register">Registration</a>
+</nav>
 
 <main>
     <div class="form-container">
