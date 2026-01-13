@@ -154,10 +154,14 @@
 <body>
 
 <nav>
-    <a href="/">Home</a> |
-    <a href="/about">About Us</a> |
-    <a href="/contacts">Contacts</a> |
-    <a href="/register">Registration</a> </nav>
+    <a href="/">Home</a>
+    <a href="/about">About Us</a>
+    <a href="/contacts">Contacts</a>
+    <a href="/menu">Menu</a>
+    <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Profile</a>
+    <a th:unless="${#authentication?.authenticated}" href="/login">Login</a>
+    <a th:unless="${#authentication?.authenticated}" href="/register">Registration</a>
+</nav>
 
 <main>
     <div class="login-container">

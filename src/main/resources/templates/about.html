@@ -164,10 +164,14 @@
 <body>
 
 <nav>
-    <a href="/">Home</a> |
-    <a href="/about">About Us</a> |
-    <a href="/contacts">Contacts</a> |
-    <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Profile</a> <a th:unless="${#authentication?.authenticated}" href="/login">Login</a> </nav>
+    <a href="/">Home</a>
+    <a href="/about">About Us</a>
+    <a href="/contacts">Contacts</a>
+    <a href="/menu">Menu</a>
+    <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Profile</a>
+    <a th:unless="${#authentication?.authenticated}" href="/login">Login</a>
+    <a th:unless="${#authentication?.authenticated}" href="/register">Registration</a>
+</nav>
 
 <header>
     <div class="header-overlay"></div>

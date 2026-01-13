@@ -4,92 +4,153 @@
     <meta charset="UTF-8">
     <title>Our Menu</title>
     <style>
-        /* Ваши стили остаются без изменений */
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
-        h1 { text-align: center; color: #4b6149; }
-        .filter { text-align: center; margin-bottom: 20px; }
-        .filter a {
-            padding: 10px 18px; margin: 5px; border-radius: 6px; text-decoration: none;
-            background: #6b8e77; color: white; transition: 0.2s; display: inline-block;
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* Фоновое изображение */
+            background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+                        url('https://images.unsplash.com/photo-1495195129352-aeb325a55b65?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
         }
-        .filter a.active { background: #3e5241; font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
-        .filter a:hover { background: #55745e; }
+
+        /* Навигация */
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 25px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        nav a {
+            color: #444;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.1em;
+            transition: 0.3s;
+        }
+        nav a:hover { color: #6b8e77; }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Заголовок */
+        .header-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .header-section h1 {
+            font-size: 3em;
+            color: #333;
+            margin: 0 0 20px 0;
+        }
+
+        /* Фильтры */
+        .filter { margin-bottom: 30px; display: flex; justify-content: center; flex-wrap: wrap; }
+        .filter a {
+            padding: 10px 20px; margin: 5px; border-radius: 30px; text-decoration: none;
+            background: white; color: #6b8e77; border: 2px solid #6b8e77;
+            transition: 0.3s; font-weight: 600;
+        }
+        .filter a.active, .filter a:hover { background: #6b8e77; color: white; }
+
+        /* Карточки блюд */
         .menu-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
         }
-        .item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
-        .name { font-size: 1.2em; font-weight: bold; margin-bottom: 8px; color: #333; }
-        .description { font-size: 0.95em; color: #555; margin-bottom: 12px; line-height: 1.4; min-height: 40px; }
-        .price { color: #6b8e77; font-weight: bold; margin-bottom: 12px; font-size: 1.1em; }
-        .category-label { color: #999; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-        .cart-form { display: flex; gap: 8px; align-items: center; }
-        .cart-form input { width: 50px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
-        .cart-form button { padding: 6px 12px; background: #6b8e77; color: white; border: none; border-radius: 4px; cursor: pointer; flex-grow: 1; }
-        .cart-form button:hover { background: #55745e; }
-        .cart-link-container { text-align: center; margin: 20px 0; }
-        .cart-link { text-decoration: none; color: white; padding: 10px 25px; background: #4b6149; border-radius: 6px; display: inline-block; }
+        .item {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .item:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+
+        .name { font-size: 1.4em; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .description { color: #666; font-size: 0.95em; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+        .price { font-size: 1.3em; color: #4b6149; font-weight: bold; margin-bottom: 15px; }
+        .category-label {
+            font-size: 0.75em; color: #aaa; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;
+        }
+
+        /* Кнопка заказа */
+        .cart-form { display: flex; gap: 10px; }
+        .cart-form input { width: 60px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
+        .cart-form button {
+            flex-grow: 1; padding: 10px; background: #6b8e77; color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .cart-form button:hover { background: #4b6149; }
+
+        .cart-btn-fixed {
+            text-align: center; margin-bottom: 30px;
+        }
+        .cart-link {
+            background: #333; color: white; padding: 15px 40px;
+            border-radius: 50px; text-decoration: none; font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-<h1>Our Menu</h1>
+<nav>
+    <a href="/">Home</a>
+    <a href="/about">About Us</a>
+    <a href="/contacts">Contacts</a>
+    <a href="/menu">Menu</a>
+    <a th:if="${#authentication?.authenticated}" th:href="@{/profile}">Profile</a>
+    <a th:unless="${#authentication?.authenticated}" href="/login">Login</a>
+</nav>
 
-<div class="filter">
-    <a th:href="@{/menu(category='all')}"
-       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'all')} ? ' active'">All</a>
+<div class="container">
+    <div class="header-section">
+        <h1>Our Menu</h1>
+        <p>Discover our carefully crafted dishes for your perfect event</p>
 
-    <a th:href="@{/menu(category='Salads')}"
-       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Salads')} ? ' active'">Salads</a>
-
-    <a th:href="@{/menu(category='Soups')}"
-       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Soups')} ? ' active'">Soups</a>
-
-    <a th:href="@{/menu(category='Main Courses')}"
-       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Main Courses')} ? ' active'">Main</a>
-
-    <a th:href="@{/menu(category='Appetizers')}"
-       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Appetizers')} ? ' active'">Snacks</a>
-
-    <a th:href="@{/menu(category='Drinks')}"
-       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Drinks')} ? ' active'">Drinks</a>
-
-    <a th:href="@{/menu(category='Desserts')}"
-       th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Desserts')} ? ' active'">Desserts</a>
-</div>
-
-<div class="cart-link-container">
-    <a href="/cart" class="cart-link">Go to Cart</a>
-</div>
-
-<hr>
-
-<div class="menu-container">
-    <div th:if="${#lists.isEmpty(menuItems)}" style="grid-column: 1/-1; text-align: center; padding: 40px; color: #777;">
-        No items found in this category.
+        <div class="filter">
+            <a th:href="@{/menu(category='all')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'all')} ? ' active'">All</a>
+            <a th:href="@{/menu(category='Salads')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Salads')} ? ' active'">Salads</a>
+            <a th:href="@{/menu(category='Soups')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Soups')} ? ' active'">Soups</a>
+            <a th:href="@{/menu(category='Main Courses')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Main Courses')} ? ' active'">Main</a>
+            <a th:href="@{/menu(category='Drinks')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Drinks')} ? ' active'">Drinks</a>
+            <a th:href="@{/menu(category='Desserts')}" th:classappend="${#strings.equalsIgnoreCase(selectedCategory, 'Desserts')} ? ' active'">Desserts</a>
+        </div>
     </div>
 
-    <div class="item" th:each="item : ${menuItems}">
-        <div class="name" th:text="${item.name}">Item Name</div>
-        <div class="description" th:text="${item.description}">Description</div>
-
-        <div class="price" th:text="${#numbers.formatDecimal(item.price, 1, 2) + ' €'}">0.00 €</div>
-
-        <div class="category-label" th:text="${item.category}">Category</div>
-
-        <form th:action="@{/cart/add}" method="post" class="cart-form">
-            <input type="hidden" name="menuItemId" th:value="${item.id}" />
-            <input type="number" name="quantity" value="1" min="1" />
-            <button type="submit">Add to Cart</button>
-        </form>
+    <div class="cart-btn-fixed">
+        <a href="/cart" class="cart-link">🛒 View Cart</a>
     </div>
-</div>
 
-<div style="margin-top: 40px;">
-    <a href="/" style="text-decoration: none; color: #6b8e77; font-weight: bold;">← Home</a>
-    <span style="margin: 0 10px; color: #ccc;">|</span>
-    <a href="/cart" style="text-decoration: none; color: #6b8e77; font-weight: bold;">My Cart</a>
+    <div class="menu-container">
+        <div class="item" th:each="item : ${menuItems}">
+            <div class="category-label" th:text="${item.category}">Category</div>
+            <div class="name" th:text="${item.name}">Item Name</div>
+            <div class="description" th:text="${item.description}">Description</div>
+            <div class="price" th:text="${#numbers.formatDecimal(item.price, 1, 2) + ' €'}">0.00 €</div>
+
+            <form th:action="@{/cart/add}" method="post" class="cart-form">
+                <input type="hidden" name="menuItemId" th:value="${item.id}" />
+                <input type="number" name="quantity" value="1" min="1" />
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 </body>

@@ -31,7 +31,7 @@ public class SecurityConfig {
                         )
                         .formLogin(form -> form
                                 .loginPage("/login")
-                                .defaultSuccessUrl("/profile", true) // Перенаправление в профиль после входа
+                                .defaultSuccessUrl("/profile", true) // Перенаправление в профиль после входа1
                                 .failureUrl("/login?error=true")
                                 .permitAll()
                         )
