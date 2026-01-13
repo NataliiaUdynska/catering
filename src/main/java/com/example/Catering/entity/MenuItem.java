@@ -13,9 +13,12 @@ public class MenuItem {
 
     private String name;
     private String description;
-
     private BigDecimal price;
     private String category;
+
+    // Для URL картинки
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
 
     // Геттеры и сеттеры
     public Long getId() { return id; }
@@ -32,4 +35,7 @@ public class MenuItem {
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }
