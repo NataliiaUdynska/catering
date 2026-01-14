@@ -25,12 +25,47 @@ About Us page
 Contacts page
 
 ![img_6.png](img_6.png)
-![img_7.png](img_7.png)
 ![img_8.png](img_8.png)
 Menu page
 
 ![img_9.png](img_9.png)
 Login page
+
+![img_10.png](img_10.png)
+Register page
+
+![img_11.png](img_11.png)
+Profile page(User)
+
+![img_12.png](img_12.png)
+Cart page
+
+![img_13.png](img_13.png)
+Order page
+
+![img_15.png](img_15.png)
+Profile page(Order History)
+
+![img_16.png](img_16.png)
+Profile page(Admin)
+
+![img_17.png](img_17.png)
+Admin/orders page
+
+![img_18.png](img_18.png)
+Invoice page
+
+![img_19.png](img_19.png)
+![img_20.png](img_20.png)
+Admin/menu page
+
+![img_21.png](img_21.png)
+![img_22.png](img_22.png)
+Admin/menu/edit page
+
+![img_23.png](img_23.png)
+Error page
+
 
 
 Technologies
