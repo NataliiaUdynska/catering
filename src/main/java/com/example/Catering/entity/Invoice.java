@@ -23,7 +23,7 @@ public class Invoice {
     private BigDecimal totalAmount;
 
     @Column(nullable = false)
-    private String status; // "DRAFT", "SENT", "PAID"
+    private String status;
 
     @Column(unique = true, nullable = false)
     private String invoiceNumber;

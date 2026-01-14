@@ -20,7 +20,7 @@ public class MenuController {
             @RequestParam(value = "category", required = false, defaultValue = "all") String category,
             Model model) {
 
-        // Проверяем, выбрана ли категория "все" или фильтр не задан
+        // Проверяем, выбрана ли категория все или фильтр не задан
         if (category == null || category.equalsIgnoreCase("all")) {
             model.addAttribute("menuItems", menuItemRepository.findAllByOrderByNameAsc());
             model.addAttribute("selectedCategory", "all");

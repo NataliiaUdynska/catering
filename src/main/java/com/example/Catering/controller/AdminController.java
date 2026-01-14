@@ -63,31 +63,31 @@ public class AdminController {
                               BindingResult result,
                               RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Ошибка при добавлении блюда");
+            redirectAttributes.addFlashAttribute("errorMessage", "Error adding menu item");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.newItem", result);
             redirectAttributes.addFlashAttribute("newItem", item);
             return "redirect:/admin/menu";
         }
         menuItemRepository.save(item);
-        redirectAttributes.addFlashAttribute("message", "Блюдо добавлено!");
+        redirectAttributes.addFlashAttribute("message", "Menu item added!");
         return "redirect:/admin/menu";
     }
 
     @PostMapping("/menu/delete/{id}")
     public String deleteMenuItem(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (!menuItemRepository.existsById(id)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Блюдо не существует");
+            redirectAttributes.addFlashAttribute("errorMessage", "Menu item does not exist");
             return "redirect:/admin/menu";
         }
         menuItemRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("message", "Блюдо удалено!");
+        redirectAttributes.addFlashAttribute("message", "Menu item deleted!");
         return "redirect:/admin/menu";
     }
 
     @GetMapping("/menu/edit/{id}")
     public String editMenuItemForm(@PathVariable Long id, Model model) {
         MenuItem item = menuItemRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Блюдо не найдено"));
+                .orElseThrow(() -> new IllegalArgumentException("Menu item not found"));
         model.addAttribute("item", item);
         return "admin/edit-menu-item";
     }
@@ -100,7 +100,7 @@ public class AdminController {
             return "admin/edit-menu-item";
         }
         menuItemRepository.save(item);
-        redirectAttributes.addFlashAttribute("message", "Блюдо обновлено!");
+        redirectAttributes.addFlashAttribute("message", "Menu item updated!");
         return "redirect:/admin/menu";
     }
 
@@ -118,13 +118,13 @@ public class AdminController {
                                     RedirectAttributes redirectAttributes) {
 
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Заказ с ID " + id + " не найден"));
+                .orElseThrow(() -> new IllegalArgumentException("Order with ID " + id + " not found"));
 
         Order.OrderStatus status;
         try {
             status = Order.OrderStatus.valueOf(statusParam);
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Недопустимый статус: " + statusParam);
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid status: " + statusParam);
             return "redirect:/admin/orders";
         }
 
@@ -135,7 +135,7 @@ public class AdminController {
         // Генерация и отправка счёта при CONFIRMED
         if (oldStatus != Order.OrderStatus.CONFIRMED && status == Order.OrderStatus.CONFIRMED) {
             if (invoiceRepository.findByOrderId(id) != null) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Счёт уже сгенерирован");
+                redirectAttributes.addFlashAttribute("errorMessage", "Invoice already generated");
                 return "redirect:/admin/orders";
             }
 
@@ -147,11 +147,11 @@ public class AdminController {
             try {
                 emailService.sendInvoiceEmail(invoice);
             } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Не удалось отправить счёт по email: " + e.getMessage());
+                redirectAttributes.addFlashAttribute("errorMessage", "Failed to send invoice email: " + e.getMessage());
             }
         }
 
-        redirectAttributes.addFlashAttribute("message", "Статус заказа обновлён!");
+        redirectAttributes.addFlashAttribute("message", "Order status updated!");
         return "redirect:/admin/orders";
     }
 
@@ -160,7 +160,7 @@ public class AdminController {
     public String viewInvoice(@PathVariable Long orderId, Model model) {
         Invoice invoice = invoiceRepository.findByOrderId(orderId);
         if (invoice == null) {
-            model.addAttribute("errorMessage", "Счёт не найден. Статус заказа может быть не CONFIRMED.");
+            model.addAttribute("errorMessage", "Invoice not found. Order status might not be CONFIRMED.");
             return "error";
         }
         model.addAttribute("invoice", invoice);

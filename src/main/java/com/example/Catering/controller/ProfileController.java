@@ -21,7 +21,7 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(Authentication authentication, Model model) {
-        // Если пользователь не авторизован — перенаправляем на вход
+        // Если пользователь не авторизован перенаправляем на вход
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login?error";
         }

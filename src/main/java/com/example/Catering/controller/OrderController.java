@@ -65,13 +65,13 @@ public class OrderController {
         // Получаем текущего пользователя
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Проверяем корзину
         @SuppressWarnings("unchecked")
         List<CartItemDto> cart = (List<CartItemDto>) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
-            model.addAttribute("errorMessage", "Корзина пуста");
+            model.addAttribute("errorMessage", "Your cart is empty");
             return "order-form";
         }
 
